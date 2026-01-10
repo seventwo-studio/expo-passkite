@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "expo": "~54.0.31",
+    "expo-constants": "^18.0.13",
     "expo-passkite": "file:..",
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",

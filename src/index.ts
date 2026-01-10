@@ -5,6 +5,16 @@ export * from './types';
 export { Pass, createPass } from './Pass';
 export { PassBuilder, createPassBuilder } from './PassBuilder';
 
+// Credentials management
+export {
+  loadCredentialsFromEnv,
+  loadPassIdentityFromEnv,
+  hasCredentialsInEnv,
+  hasPassIdentityInEnv,
+  CREDENTIAL_ENV_VARS,
+} from './credentials';
+export type { PassIdentity } from './credentials';
+
 // Native wallet integration
 export {
   addPassToWallet,

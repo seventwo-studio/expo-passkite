@@ -46,6 +46,15 @@ coverage/
 .env.local
 .env.*.local
 
+# Apple Pass Signing Credentials (NEVER commit these!)
+*.p12
+*.pem
+*.cer
+*.key
+credentials/
+!credentials/.gitkeep
+!*.example.pem
+
 # Lock files (prefer pnpm-lock.yaml)
 package-lock.json
 yarn.lock

@@ -22,11 +22,22 @@ import {
   onPassAdded,
   onPassRemoved,
 } from 'expo-passkite';
+import Constants from 'expo-constants';
 
-// Sample pass identifiers - replace with your own for real testing
-const SAMPLE_PASS_TYPE_ID = 'pass.com.example.passkite';
-const SAMPLE_TEAM_ID = 'XXXXXXXXXX';
-const SAMPLE_SERIAL = `DEMO-${Date.now()}`;
+// Load configuration from environment/app config
+// Set these in your .env file or app.json extra config
+const config = Constants.expoConfig?.extra ?? {};
+
+const PASS_TYPE_ID = config.PASSKITE_PASS_TYPE_ID ?? 'pass.com.example.passkite';
+const TEAM_ID = config.PASSKITE_TEAM_ID ?? 'XXXXXXXXXX';
+const SERIAL_NUMBER = `PASS-${Date.now()}`;
+
+// Check if credentials are configured (for UI messaging)
+const HAS_CREDENTIALS = !!(
+  config.PASSKITE_PASS_TYPE_ID &&
+  config.PASSKITE_TEAM_ID &&
+  PASS_TYPE_ID !== 'pass.com.example.passkite'
+);
 
 export default function App() {
   const [isLibraryAvailable, setIsLibraryAvailable] = useState<boolean | null>(null);
@@ -73,7 +84,7 @@ export default function App() {
 
   const checkPassExists = async () => {
     try {
-      const exists = await containsPass(SAMPLE_PASS_TYPE_ID, SAMPLE_SERIAL);
+      const exists = await containsPass(PASS_TYPE_ID, SERIAL_NUMBER);
       setPassExists(exists);
     } catch (error) {
       console.error('Error checking pass existence:', error);
@@ -86,9 +97,9 @@ export default function App() {
       // Build a sample store card pass
       const builder = createPassBuilder()
         .setIdentifiers({
-          passTypeIdentifier: SAMPLE_PASS_TYPE_ID,
-          serialNumber: SAMPLE_SERIAL,
-          teamIdentifier: SAMPLE_TEAM_ID,
+          passTypeIdentifier: PASS_TYPE_ID,
+          serialNumber: SERIAL_NUMBER,
+          teamIdentifier: TEAM_ID,
         })
         .setOrganization({
           organizationName: 'Passkite Demo',
@@ -133,13 +144,13 @@ export default function App() {
         })
         .addBarcode({
           format: BarcodeFormat.QR,
-          message: `https://example.com/pass/${SAMPLE_SERIAL}`,
-          altText: SAMPLE_SERIAL,
+          message: `https://example.com/pass/${SERIAL_NUMBER}`,
+          altText: SERIAL_NUMBER,
         })
         .setRelevantDate(new Date())
         .setSemanticTags({
           membershipProgramName: 'Passkite Rewards',
-          membershipProgramNumber: SAMPLE_SERIAL,
+          membershipProgramNumber: SERIAL_NUMBER,
         });
 
       const { passData, images } = builder.build();
@@ -153,7 +164,7 @@ export default function App() {
 
       Alert.alert(
         'Pass Generated',
-        `Generated pass with serial: ${SAMPLE_SERIAL}\n\nNote: This is an unsigned demo pass. To add to wallet, you need valid Apple signing certificates.`,
+        `Generated pass with serial: ${SERIAL_NUMBER}\n\nNote: This is an unsigned demo pass. To add to wallet, you need valid Apple signing certificates.`,
         [{ text: 'OK' }]
       );
     } catch (error) {
@@ -306,15 +317,15 @@ export default function App() {
           <Text style={styles.sectionTitle}>Configuration</Text>
           <View style={styles.configRow}>
             <Text style={styles.configLabel}>Pass Type ID:</Text>
-            <Text style={styles.configValue}>{SAMPLE_PASS_TYPE_ID}</Text>
+            <Text style={styles.configValue}>{PASS_TYPE_ID}</Text>
           </View>
           <View style={styles.configRow}>
             <Text style={styles.configLabel}>Team ID:</Text>
-            <Text style={styles.configValue}>{SAMPLE_TEAM_ID}</Text>
+            <Text style={styles.configValue}>{TEAM_ID}</Text>
           </View>
           <View style={styles.configRow}>
             <Text style={styles.configLabel}>Serial:</Text>
-            <Text style={styles.configValue}>{SAMPLE_SERIAL}</Text>
+            <Text style={styles.configValue}>{SERIAL_NUMBER}</Text>
           </View>
         </View>
       </ScrollView>
