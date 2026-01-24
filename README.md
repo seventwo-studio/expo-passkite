@@ -2,6 +2,8 @@
 
 Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet.
 
+**[Documentation](https://seventwo-studio.github.io/passkite/)** | **[API Reference](https://seventwo-studio.github.io/passkite/reference/api/)** | **[Setup Guide](https://seventwo-studio.github.io/passkite/guides/setup-credentials/)**
+
 ## Installation
 
 ```bash
@@ -187,30 +189,17 @@ For Android, the `addPassToWallet` function expects a Google Wallet JWT token in
 
 See [Google Wallet API documentation](https://developers.google.com/wallet) for details.
 
-## API Reference
+## Documentation
 
-### Pass Generation
+For complete documentation, visit **[seventwo-studio.github.io/passkite](https://seventwo-studio.github.io/passkite/)**
 
-- `createPassBuilder()` - Create a new PassBuilder instance
-- `createPass(passData, images, personalization?)` - Create a Pass instance
-- `pass.generate()` - Generate .pkpass as Buffer
-- `pass.generateBase64()` - Generate .pkpass as base64 string
-
-### Wallet Integration
-
-- `addPassToWallet(passBase64)` - Add pass to device wallet
-- `canAddPasses()` - Check if passes can be added
-- `isPassLibraryAvailable()` - Check if wallet is available
-- `containsPass(typeId, serialNumber)` - Check if pass exists
-
-### Events
-
-- `onPassAdded(callback)` - Subscribe to pass added events
-- `onPassRemoved(callback)` - Subscribe to pass removed events
-
-### Config Plugin
-
-- `withPasskite(config, options)` - Expo config plugin
+- [Getting Started](https://seventwo-studio.github.io/passkite/getting-started/introduction/)
+- [Setup Credentials](https://seventwo-studio.github.io/passkite/guides/setup-credentials/)
+- [Creating Passes](https://seventwo-studio.github.io/passkite/guides/creating-passes/)
+- [Pass Types](https://seventwo-studio.github.io/passkite/guides/pass-types/)
+- [Wallet Integration](https://seventwo-studio.github.io/passkite/guides/wallet-integration/)
+- [API Reference](https://seventwo-studio.github.io/passkite/reference/api/)
+- [TypeScript Types](https://seventwo-studio.github.io/passkite/reference/types/)
 
 ## License
 
