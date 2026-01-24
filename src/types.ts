@@ -99,6 +99,13 @@ export enum EventType {
 }
 
 /**
+ * Upcoming pass event type for iOS 26+
+ */
+export enum UpcomingPassEventType {
+  Event = 'event',
+}
+
+/**
  * Barcode definition
  */
 export interface Barcode {
@@ -205,6 +212,28 @@ export interface Personalization {
 }
 
 /**
+ * Upcoming pass event for iOS 26+
+ */
+export interface UpcomingPassEvent {
+  type: UpcomingPassEventType;
+  identifier: string;
+  displayName: string;
+  eventDate: string;
+  isActive?: boolean;
+  venuePlaceID?: string;
+  additionalInfoFields?: PassFieldContent[];
+  backFields?: PassFieldContent[];
+  semantics?: SemanticTagValue;
+}
+
+/**
+ * Pass URLs for iOS 26+
+ */
+export interface PassURLs {
+  appLaunchURL?: string;
+}
+
+/**
  * Semantic tag values for machine-readable metadata
  */
 export interface SemanticTagValue {
@@ -235,6 +264,15 @@ export interface SemanticTagValue {
   passengerName?: { familyName?: string; givenName?: string };
   priorityStatus?: string;
   securityScreening?: string;
+
+  // iOS 26+ Boarding Pass SSRs
+  passengerServiceSSRs?: string[];
+
+  // iOS 26+ Custom Badge Fields
+  internationalDocumentsVerifiedText?: string;
+  membershipTierStatusText?: string;
+  priorityStatusText?: string;
+  fareClassText?: string;
 
   // Transit
   transitProvider?: string;
@@ -338,6 +376,10 @@ export interface PassData {
   // Associated apps
   associatedStoreIdentifiers?: number[];
   appLaunchURL?: string;
+
+  // iOS 26+ URLs and upcoming pass information
+  urls?: PassURLs;
+  upcomingPassInformation?: UpcomingPassEvent[];
 
   // User info
   userInfo?: Record<string, unknown>;

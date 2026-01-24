@@ -14,6 +14,9 @@ import {
   SemanticTagValue,
   Personalization,
   RelevantDate,
+  UpcomingPassEvent,
+  UpcomingPassEventType,
+  PassURLs,
 } from './types';
 
 /**
@@ -320,6 +323,98 @@ export class PassBuilder {
    */
   setPersonalization(personalization: Personalization): this {
     this.personalization = personalization;
+    return this;
+  }
+
+  /**
+   * Add an upcoming pass event (iOS 26+ multi-event tickets)
+   */
+  addUpcomingPassEvent(event: {
+    identifier: string;
+    displayName: string;
+    eventDate: Date | string;
+    isActive?: boolean;
+    venuePlaceID?: string;
+    additionalInfoFields?: PassFieldContent[];
+    backFields?: PassFieldContent[];
+    semantics?: SemanticTagValue;
+  }): this {
+    if (!this.data.upcomingPassInformation) {
+      this.data.upcomingPassInformation = [];
+    }
+    const eventData: UpcomingPassEvent = {
+      type: UpcomingPassEventType.Event,
+      identifier: event.identifier,
+      displayName: event.displayName,
+      eventDate: event.eventDate instanceof Date
+        ? event.eventDate.toISOString()
+        : event.eventDate,
+    };
+    if (event.isActive !== undefined) {
+      eventData.isActive = event.isActive;
+    }
+    if (event.venuePlaceID) {
+      eventData.venuePlaceID = event.venuePlaceID;
+    }
+    if (event.additionalInfoFields) {
+      eventData.additionalInfoFields = event.additionalInfoFields;
+    }
+    if (event.backFields) {
+      eventData.backFields = event.backFields;
+    }
+    if (event.semantics) {
+      eventData.semantics = event.semantics;
+    }
+    this.data.upcomingPassInformation.push(eventData);
+    return this;
+  }
+
+  /**
+   * Set URLs for pass actions (iOS 26+)
+   */
+  setURLs(urls: PassURLs): this {
+    this.data.urls = urls;
+    return this;
+  }
+
+  /**
+   * Add a passenger service SSR code (iOS 26+ boarding pass badges)
+   */
+  addPassengerServiceSSR(ssrCode: string): this {
+    if (!this.data.semantics) {
+      this.data.semantics = {};
+    }
+    if (!this.data.semantics.passengerServiceSSRs) {
+      this.data.semantics.passengerServiceSSRs = [];
+    }
+    this.data.semantics.passengerServiceSSRs.push(ssrCode);
+    return this;
+  }
+
+  /**
+   * Set custom badge fields for boarding passes (iOS 26+)
+   */
+  setBoardingPassBadges(badges: {
+    internationalDocumentsVerifiedText?: string;
+    membershipTierStatusText?: string;
+    priorityStatusText?: string;
+    fareClassText?: string;
+  }): this {
+    if (!this.data.semantics) {
+      this.data.semantics = {};
+    }
+    if (badges.internationalDocumentsVerifiedText !== undefined) {
+      this.data.semantics.internationalDocumentsVerifiedText = badges.internationalDocumentsVerifiedText;
+    }
+    if (badges.membershipTierStatusText !== undefined) {
+      this.data.semantics.membershipTierStatusText = badges.membershipTierStatusText;
+    }
+    if (badges.priorityStatusText !== undefined) {
+      this.data.semantics.priorityStatusText = badges.priorityStatusText;
+    }
+    if (badges.fareClassText !== undefined) {
+      this.data.semantics.fareClassText = badges.fareClassText;
+    }
     return this;
   }
 

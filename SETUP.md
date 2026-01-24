@@ -82,20 +82,11 @@ openssl pkcs12 -in pass-certificate.p12 -nocerts -out credentials/signer-key.pem
 # If not, you'll need to provide the passphrase in PASSKITE_SIGNER_KEY_PASSPHRASE
 ```
 
-### Download the Apple WWDR Certificate
+### Apple WWDR Certificate (Embedded)
 
-Apple's Worldwide Developer Relations (WWDR) certificate is required for pass signing:
+The Apple Worldwide Developer Relations (WWDR) G4 certificate is now **embedded in PassKite** - you don't need to download or configure it.
 
-```bash
-# Download the G4 certificate (for passes created after January 27, 2022)
-curl -o credentials/wwdr.cer https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer
-
-# Convert from DER to PEM format
-openssl x509 -inform DER -in credentials/wwdr.cer -out credentials/wwdr.pem
-
-# Clean up
-rm credentials/wwdr.cer
-```
+If you need to override the embedded certificate (e.g., for testing), you can optionally set `PASSKITE_WWDR_CERT`.
 
 ## Step 4: Find Your Team ID
 
@@ -119,13 +110,14 @@ rm credentials/wwdr.cer
    PASSKITE_TEAM_ID=ABCD123456
 
    # Credential files (using file: prefix)
-   PASSKITE_WWDR_CERT=file:./credentials/wwdr.pem
    PASSKITE_SIGNER_CERT=file:./credentials/signer-cert.pem
    PASSKITE_SIGNER_KEY=file:./credentials/signer-key.pem
 
    # If your private key is encrypted, add the passphrase
    PASSKITE_SIGNER_KEY_PASSPHRASE=your-passphrase-here
    ```
+
+   Note: The WWDR certificate is embedded in PassKite, so you don't need to configure it.
 
 ## Step 6: Verify Your Setup
 
@@ -157,7 +149,6 @@ Store credentials as secrets in your CI/CD platform:
 env:
   PASSKITE_PASS_TYPE_ID: ${{ secrets.PASSKITE_PASS_TYPE_ID }}
   PASSKITE_TEAM_ID: ${{ secrets.PASSKITE_TEAM_ID }}
-  PASSKITE_WWDR_CERT: ${{ secrets.PASSKITE_WWDR_CERT }}
   PASSKITE_SIGNER_CERT: ${{ secrets.PASSKITE_SIGNER_CERT }}
   PASSKITE_SIGNER_KEY: ${{ secrets.PASSKITE_SIGNER_KEY }}
   PASSKITE_SIGNER_KEY_PASSPHRASE: ${{ secrets.PASSKITE_SIGNER_KEY_PASSPHRASE }}

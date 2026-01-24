@@ -1,9 +1,11 @@
 import { SigningCredentials } from './types';
+import { getWWDRCertificate } from './certificates';
 
 /**
  * Environment variable names for pass signing credentials
  */
 export const CREDENTIAL_ENV_VARS = {
+  /** @deprecated WWDR certificate is now embedded. This env var is optional and only used to override the built-in certificate. */
   WWDR_CERTIFICATE: 'PASSKITE_WWDR_CERT',
   SIGNER_CERTIFICATE: 'PASSKITE_SIGNER_CERT',
   SIGNER_KEY: 'PASSKITE_SIGNER_KEY',
@@ -28,27 +30,26 @@ export interface PassIdentity {
  * - A file path prefixed with "file:" (e.g., "file:./credentials/signer.pem")
  *
  * Required environment variables:
- * - PASSKITE_WWDR_CERT: Apple WWDR certificate (PEM format)
  * - PASSKITE_SIGNER_CERT: Your pass signing certificate (PEM format)
  * - PASSKITE_SIGNER_KEY: Your pass signing private key (PEM format)
  *
  * Optional:
  * - PASSKITE_SIGNER_KEY_PASSPHRASE: Passphrase for encrypted private key
+ * - PASSKITE_WWDR_CERT: Override the built-in Apple WWDR certificate
  *
  * @throws Error if required credentials are missing
  */
 export function loadCredentialsFromEnv(): SigningCredentials {
-  const wwdrCert = process.env[CREDENTIAL_ENV_VARS.WWDR_CERTIFICATE];
+  const wwdrCertOverride = process.env[CREDENTIAL_ENV_VARS.WWDR_CERTIFICATE];
   const signerCert = process.env[CREDENTIAL_ENV_VARS.SIGNER_CERTIFICATE];
   const signerKey = process.env[CREDENTIAL_ENV_VARS.SIGNER_KEY];
   const passphrase = process.env[CREDENTIAL_ENV_VARS.SIGNER_KEY_PASSPHRASE];
 
   const missing: string[] = [];
-  if (!wwdrCert) missing.push(CREDENTIAL_ENV_VARS.WWDR_CERTIFICATE);
   if (!signerCert) missing.push(CREDENTIAL_ENV_VARS.SIGNER_CERTIFICATE);
   if (!signerKey) missing.push(CREDENTIAL_ENV_VARS.SIGNER_KEY);
 
-  if (missing.length > 0 || !wwdrCert || !signerCert || !signerKey) {
+  if (missing.length > 0 || !signerCert || !signerKey) {
     throw new Error(
       `Missing required environment variables for pass signing:\n` +
       `  ${missing.join('\n  ')}\n\n` +
@@ -57,7 +58,7 @@ export function loadCredentialsFromEnv(): SigningCredentials {
   }
 
   return {
-    wwdrCertificate: resolveCredential(wwdrCert),
+    wwdrCertificate: wwdrCertOverride ? resolveCredential(wwdrCertOverride) : getWWDRCertificate(),
     signerCertificate: resolveCredential(signerCert),
     signerKey: resolveCredential(signerKey),
     signerKeyPassphrase: passphrase,
@@ -98,10 +99,11 @@ export function loadPassIdentityFromEnv(): PassIdentity {
 /**
  * Check if all required credentials are available in environment.
  * Useful for conditional logic without throwing errors.
+ *
+ * Note: WWDR certificate is now embedded, so only signer credentials are checked.
  */
 export function hasCredentialsInEnv(): boolean {
   return !!(
-    process.env[CREDENTIAL_ENV_VARS.WWDR_CERTIFICATE] &&
     process.env[CREDENTIAL_ENV_VARS.SIGNER_CERTIFICATE] &&
     process.env[CREDENTIAL_ENV_VARS.SIGNER_KEY]
   );

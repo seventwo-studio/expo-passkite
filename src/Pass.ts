@@ -77,6 +77,22 @@ function serializePassData(data: PassData): Record<string, unknown> {
           }
           return obj;
         });
+      } else if (key === 'upcomingPassInformation' && Array.isArray(value)) {
+        result[key] = value.map((event: Record<string, unknown>) => {
+          const obj: Record<string, unknown> = {};
+          for (const [eventKey, eventValue] of Object.entries(event)) {
+            if (eventValue !== undefined && eventValue !== null) {
+              if (eventKey === 'eventDate' && eventValue instanceof Date) {
+                obj[eventKey] = (eventValue as Date).toISOString();
+              } else if (typeof eventValue === 'object' && !Array.isArray(eventValue)) {
+                obj[eventKey] = serializePassData(eventValue as PassData);
+              } else {
+                obj[eventKey] = eventValue;
+              }
+            }
+          }
+          return obj;
+        });
       } else if (typeof value === 'object' && !Array.isArray(value)) {
         // Recursively serialize nested objects
         const nested = serializePassData(value as PassData);

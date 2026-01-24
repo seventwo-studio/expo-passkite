@@ -15,6 +15,9 @@ export {
 } from './credentials';
 export type { PassIdentity } from './credentials';
 
+// Embedded certificates
+export { APPLE_WWDR_G4_CERTIFICATE, getWWDRCertificate } from './certificates';
+
 // Native wallet integration
 export {
   addPassToWallet,
