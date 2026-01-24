@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "emitDeclarationOnly": true,
-    "types": ["bun-types"]
+    "types": ["bun", "node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "build", "example", "src/**/*.test.ts"]
