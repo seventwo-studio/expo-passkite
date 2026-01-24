@@ -1,0 +1,51 @@
+# Source files (we ship built files)
+src/
+
+# Tests
+**/*.test.ts
+**/__tests__/
+
+# Development
+.env
+.env.*
+.envrc
+.mise.toml
+devenv.nix
+.devenv/
+.github/
+.vscode/
+
+# Documentation (available online)
+docs/
+SETUP.md
+CHANGELOG.md
+
+# Example app
+example/
+
+# Scripts
+scripts/
+
+# Test artifacts
+test-passes/
+test-output.pkpass
+*.pkpass
+
+# Credentials
+credentials/
+*.p12
+*.pem
+*.cer
+*.key
+
+# Config files
+tsconfig.json
+bunfig.toml
+commitlint.config.js
+bun.lock
+
+# IDE
+.idea/
+*.swp
+*.swo
+.DS_Store
