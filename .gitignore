@@ -31,6 +31,11 @@ example/android/.gradle/
 example/android/build/
 example/android/app/build/
 
+# Docs
+docs/node_modules/
+docs/dist/
+docs/.astro/
+
 # Logs
 *.log
 npm-debug.log*

@@ -1,0 +1,85 @@
+# PassKite
+
+> Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet with Expo and React Native
+
+PassKite is an Expo/React Native library for generating Apple Wallet passes and adding them to device wallets.
+
+## Documentation
+
+- Full docs: https://seventwo-studio.github.io/passkite/
+- API Reference: https://seventwo-studio.github.io/passkite/reference/api/
+- Types Reference: https://seventwo-studio.github.io/passkite/reference/types/
+- LLM-optimized full docs: https://seventwo-studio.github.io/passkite/llms-full.txt
+
+## Quick Start
+
+```bash
+npx expo install expo-passkite
+```
+
+```typescript
+import { createPassBuilder, createPass, PassType, addPassToWallet } from 'expo-passkite';
+
+const builder = createPassBuilder()
+  .setIdentifiers({
+    passTypeIdentifier: 'pass.com.example.app',
+    serialNumber: 'CARD-001',
+    teamIdentifier: 'TEAM_ID',
+  })
+  .setOrganization({
+    organizationName: 'Company',
+    description: 'Loyalty Card',
+  })
+  .setPassType(PassType.StoreCard)
+  .addPrimaryField({ key: 'points', label: 'POINTS', value: '500' });
+
+const { passData, images } = builder.build();
+const pass = createPass(passData, images);
+pass.setSigningCredentials({ signerCertificate, signerKey });
+const base64 = await pass.generateBase64();
+await addPassToWallet(base64);
+```
+
+## Key Features
+
+- Pass Generation: Create valid .pkpass files with fluent builder API
+- All Pass Types: BoardingPass, Coupon, EventTicket, StoreCard, Generic
+- Wallet Integration: Add passes to iOS Wallet with native module
+- Expo Config Plugin: Automatic iOS entitlements setup
+- Embedded WWDR: Apple certificate included, no extra setup
+
+## Main Exports
+
+### Pass Creation
+- `createPassBuilder()` - Create pass data builder
+- `createPass(passData, images)` - Create pass instance
+- `pass.setSigningCredentials({...})` - Set signing certs
+- `pass.generate()` - Generate as Buffer
+- `pass.generateBase64()` - Generate as base64
+
+### Wallet
+- `addPassToWallet(base64)` - Add to device wallet
+- `canAddPasses()` - Check if can add passes
+- `isPassLibraryAvailable()` - Check wallet availability
+- `containsPass(typeId, serial)` - Check if pass exists
+
+### Events
+- `onPassAdded(callback)` - Subscribe to add events
+- `onPassRemoved(callback)` - Subscribe to remove events
+
+### Enums
+- `PassType`: BoardingPass, Coupon, EventTicket, StoreCard, Generic
+- `BarcodeFormat`: QR, PDF417, Aztec, Code128
+- `PassImageType`: Icon, Logo, Strip, Background, Thumbnail, Footer
+- `TransitType`: Air, Boat, Bus, Train, Generic
+
+## Requirements
+
+- Expo SDK 52+ or React Native 0.76+
+- Apple Developer Program membership
+- Pass Type ID certificate
+- iOS 15+ for wallet features
+
+## Repository
+
+https://github.com/seventwo-studio/passkite

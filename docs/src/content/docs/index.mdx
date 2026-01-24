@@ -1,0 +1,70 @@
+---
+title: PassKite
+description: Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet
+template: splash
+hero:
+  tagline: Generate Apple Wallet passes and add them to iOS Wallet or Google Wallet with Expo and React Native
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: Get Started
+      link: /passkite/getting-started/introduction/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/seventwo-studio/passkite
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Features
+
+<CardGrid stagger>
+	<Card title="Pass Generation" icon="document">
+		Create Apple Wallet passes with a fluent builder API. Supports all pass types: boarding passes, coupons, event tickets, store cards, and generic passes.
+	</Card>
+	<Card title="Wallet Integration" icon="add-document">
+		Add passes directly to iOS Wallet with native integration. Check pass availability, listen to add/remove events, and more.
+	</Card>
+	<Card title="Expo Config Plugin" icon="setting">
+		Automatic iOS configuration with Expo config plugin. Just add your Pass Type IDs and run prebuild.
+	</Card>
+	<Card title="Cross-Platform" icon="laptop">
+		Works with iOS Wallet natively. Google Wallet support via JWT tokens for Android.
+	</Card>
+</CardGrid>
+
+## Quick Example
+
+```typescript
+import { createPassBuilder, createPass, PassType, addPassToWallet } from 'expo-passkite';
+
+// Build a store card pass
+const builder = createPassBuilder()
+  .setIdentifiers({
+    passTypeIdentifier: 'pass.com.example.myapp',
+    serialNumber: 'E5982H-I2',
+    teamIdentifier: 'A93A5CM278',
+  })
+  .setOrganization({
+    organizationName: 'Example Inc.',
+    description: 'Store Card',
+  })
+  .setPassType(PassType.StoreCard)
+  .addPrimaryField({
+    key: 'balance',
+    label: 'Balance',
+    value: '$50.00',
+  });
+
+const { passData, images } = builder.build();
+const pass = createPass(passData, images);
+
+// Sign and generate the pass
+pass.setSigningCredentials({ /* ... */ });
+const pkpassBase64 = await pass.generateBase64();
+
+// Add to wallet
+await addPassToWallet(pkpassBase64);
+```

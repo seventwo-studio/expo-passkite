@@ -1,0 +1,782 @@
+# PassKite - Complete Documentation for LLMs
+
+> Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet with Expo and React Native
+
+This document contains the complete documentation for PassKite in a format optimized for large language models.
+
+---
+
+## TABLE OF CONTENTS
+
+1. Overview
+2. Installation
+3. Configuration
+4. Pass Builder API
+5. Pass Types
+6. Images
+7. Barcodes
+8. Signing Credentials
+9. Wallet Integration
+10. Events
+11. Complete TypeScript Types
+12. Examples
+
+---
+
+## 1. OVERVIEW
+
+PassKite is an Expo/React Native library that enables:
+- Creating valid Apple Wallet passes (.pkpass files) in JavaScript/TypeScript
+- Adding passes directly to iOS Wallet via native module
+- Listening for pass lifecycle events (added/removed)
+- Google Wallet support via JWT tokens on Android
+
+### Requirements
+- Expo SDK 52+ or React Native 0.76+
+- Apple Developer Program membership ($99/year)
+- Pass Type ID and signing certificate from Apple
+- iOS 15+ for wallet features
+
+### Key Features
+- Fluent builder API for pass construction
+- All 5 pass types supported (StoreCard, EventTicket, BoardingPass, Coupon, Generic)
+- Embedded Apple WWDR G4 certificate (no manual download needed)
+- Expo config plugin for automatic iOS entitlements
+- Full TypeScript support
+
+---
+
+## 2. INSTALLATION
+
+```bash
+npx expo install expo-passkite
+```
+
+Or with package managers:
+```bash
+npm install expo-passkite
+yarn add expo-passkite
+pnpm add expo-passkite
+bun add expo-passkite
+```
+
+---
+
+## 3. CONFIGURATION
+
+### Expo Config Plugin
+
+Add to app.json:
+```json
+{
+  "expo": {
+    "plugins": [
+      ["expo-passkite", {
+        "passTypeIdentifiers": ["$(TeamIdentifierPrefix)pass.com.example.myapp"]
+      }]
+    ]
+  }
+}
+```
+
+Then run prebuild:
+```bash
+npx expo prebuild
+```
+
+This configures the `com.apple.developer.pass-type-identifiers` entitlement.
+
+---
+
+## 4. PASS BUILDER API
+
+### Creating a Builder
+
+```typescript
+import { createPassBuilder } from 'expo-passkite';
+
+const builder = createPassBuilder();
+```
+
+### Required Methods
+
+#### setIdentifiers(identifiers)
+```typescript
+builder.setIdentifiers({
+  passTypeIdentifier: string,  // e.g., 'pass.com.example.app'
+  serialNumber: string,        // unique per pass
+  teamIdentifier: string,      // Apple Team ID (10 chars)
+});
+```
+
+#### setOrganization(org)
+```typescript
+builder.setOrganization({
+  organizationName: string,    // company name
+  description: string,         // pass description
+  logoText?: string,           // text next to logo
+});
+```
+
+#### setPassType(type)
+```typescript
+import { PassType } from 'expo-passkite';
+
+builder.setPassType(PassType.StoreCard);
+
+// PassType enum values:
+// PassType.BoardingPass
+// PassType.Coupon
+// PassType.EventTicket
+// PassType.StoreCard
+// PassType.Generic
+```
+
+### Optional Methods
+
+#### setColors(colors)
+```typescript
+builder.setColors({
+  backgroundColor?: string,  // 'rgb(r, g, b)'
+  foregroundColor?: string,  // text color
+  labelColor?: string,       // label color
+});
+```
+
+#### setTransitType(type) - For BoardingPass only
+```typescript
+import { TransitType } from 'expo-passkite';
+
+builder.setTransitType(TransitType.Air);
+
+// TransitType enum values:
+// TransitType.Air
+// TransitType.Boat
+// TransitType.Bus
+// TransitType.Train
+// TransitType.Generic
+```
+
+### Adding Fields
+
+All field methods accept a PassField object:
+```typescript
+interface PassField {
+  key: string;                 // unique identifier
+  label?: string;              // display label
+  value: string | number;      // display value
+  attributedValue?: string;    // HTML formatted
+  changeMessage?: string;      // %@ replaced with new value
+  textAlignment?: TextAlignment;
+  dateStyle?: DateStyle;
+  timeStyle?: TimeStyle;
+  numberStyle?: NumberStyle;
+  currencyCode?: string;
+}
+```
+
+#### addPrimaryField(field) - Most prominent
+```typescript
+builder.addPrimaryField({
+  key: 'balance',
+  label: 'BALANCE',
+  value: '$50.00',
+});
+```
+
+#### addSecondaryField(field)
+```typescript
+builder.addSecondaryField({
+  key: 'name',
+  label: 'MEMBER',
+  value: 'John Doe',
+});
+```
+
+#### addAuxiliaryField(field)
+```typescript
+builder.addAuxiliaryField({
+  key: 'level',
+  label: 'STATUS',
+  value: 'Gold',
+});
+```
+
+#### addHeaderField(field) - Top right area
+```typescript
+builder.addHeaderField({
+  key: 'gate',
+  label: 'GATE',
+  value: 'A12',
+});
+```
+
+#### addBackField(field) - Shown on flip
+```typescript
+builder.addBackField({
+  key: 'terms',
+  label: 'Terms',
+  value: 'Full terms text...',
+});
+```
+
+### Relevance Methods
+
+#### setLocations(locations)
+```typescript
+builder.setLocations([
+  {
+    latitude: number,
+    longitude: number,
+    altitude?: number,
+    relevantText?: string,  // lock screen message
+  },
+]);
+```
+
+#### setBeacons(beacons)
+```typescript
+builder.setBeacons([
+  {
+    proximityUUID: string,
+    major?: number,
+    minor?: number,
+    relevantText?: string,
+  },
+]);
+```
+
+#### setRelevantDate(date)
+```typescript
+builder.setRelevantDate(new Date('2024-12-25T10:00:00'));
+```
+
+### Other Methods
+
+#### setExpirationDate(date)
+```typescript
+builder.setExpirationDate(new Date('2025-12-31'));
+```
+
+#### setVoided(voided)
+```typescript
+builder.setVoided(true);  // grays out the pass
+```
+
+#### setWebService(config)
+```typescript
+builder.setWebService({
+  authenticationToken: string,
+  webServiceURL: string,
+});
+```
+
+#### setNFC(nfc)
+```typescript
+builder.setNFC({
+  message: string,
+  encryptionPublicKey?: string,
+});
+```
+
+### Building the Pass
+
+```typescript
+const { passData, images } = builder.build();
+```
+
+---
+
+## 5. PASS TYPES
+
+### StoreCard
+Best for: Loyalty cards, membership cards, gift cards
+- Strip image support
+- Primary field for balance/points
+- Secondary/auxiliary for member info
+
+### EventTicket
+Best for: Concerts, movies, sports events
+- Thumbnail or strip image
+- Event details in primary
+- Date/venue in secondary
+- Seat info in auxiliary
+
+### BoardingPass
+Best for: Airlines, trains, buses, ferries
+- Transit-specific layout
+- Requires transitType
+- Origin/destination in primary
+- Gate/seat in auxiliary
+
+### Coupon
+Best for: Discounts, promotions
+- Strip image for graphics
+- Offer in primary
+- Expiration support
+
+### Generic
+Best for: ID badges, parking permits, any other passes
+- Thumbnail support
+- Flexible layout
+
+---
+
+## 6. IMAGES
+
+### Adding Images to Pass
+
+```typescript
+import { createPass, PassImageType } from 'expo-passkite';
+
+const { passData, images } = builder.build();
+const pass = createPass(passData, images);
+
+pass.addImage({
+  type: PassImageType.Icon,  // REQUIRED
+  data: Buffer,              // image data
+  scale?: 1 | 2 | 3,        // retina scale
+  locale?: string,           // localization
+});
+```
+
+### PassImageType Enum
+
+```typescript
+enum PassImageType {
+  Icon = 'icon',           // 29x29 pt - REQUIRED
+  Logo = 'logo',           // 160x50 pt max
+  Strip = 'strip',         // 375x123 pt
+  Background = 'background', // 180x220 pt
+  Thumbnail = 'thumbnail', // 90x90 pt
+  Footer = 'footer',       // 286x15 pt
+}
+```
+
+### Image Sizes
+
+| Type | @1x | @2x | @3x |
+|------|-----|-----|-----|
+| Icon | 29x29 | 58x58 | 87x87 |
+| Logo | 160x50 | 320x100 | 480x150 |
+| Strip | 375x123 | 750x246 | 1125x369 |
+| Background | 180x220 | 360x440 | 540x660 |
+| Thumbnail | 90x90 | 180x180 | 270x270 |
+| Footer | 286x15 | 572x30 | 858x45 |
+
+---
+
+## 7. BARCODES
+
+### Adding Barcodes
+
+```typescript
+import { BarcodeFormat } from 'expo-passkite';
+
+builder.addBarcode({
+  format: BarcodeFormat.QR,
+  message: string,            // barcode content
+  messageEncoding?: string,   // default: 'iso-8859-1'
+  altText?: string,           // text below barcode
+});
+```
+
+### BarcodeFormat Enum
+
+```typescript
+enum BarcodeFormat {
+  QR = 'PKBarcodeFormatQR',
+  PDF417 = 'PKBarcodeFormatPDF417',
+  Aztec = 'PKBarcodeFormatAztec',
+  Code128 = 'PKBarcodeFormatCode128',
+}
+```
+
+---
+
+## 8. SIGNING CREDENTIALS
+
+### Setting Credentials
+
+```typescript
+pass.setSigningCredentials({
+  wwdrCertificate?: string,     // optional, embedded by default
+  signerCertificate: string,    // Pass Type ID cert PEM
+  signerKey: string,            // Private key PEM
+  signerKeyPassphrase?: string, // if key is encrypted
+});
+```
+
+### Obtaining Credentials
+
+1. Create Pass Type ID at Apple Developer Portal
+2. Create Pass Type ID Certificate
+3. Export certificate and key from Keychain as .p12
+4. Convert to PEM:
+```bash
+openssl pkcs12 -in pass.p12 -clcerts -nokeys -out signer-cert.pem
+openssl pkcs12 -in pass.p12 -nocerts -out signer-key.pem
+```
+
+### WWDR Certificate
+
+The Apple WWDR G4 certificate is embedded in PassKite. No manual configuration needed.
+
+---
+
+## 9. WALLET INTEGRATION
+
+### Checking Availability
+
+```typescript
+import { isPassLibraryAvailable, canAddPasses } from 'expo-passkite';
+
+const available = await isPassLibraryAvailable();
+const canAdd = await canAddPasses();
+```
+
+### Adding to Wallet
+
+```typescript
+import { addPassToWallet } from 'expo-passkite';
+
+const base64 = await pass.generateBase64();
+const result = await addPassToWallet(base64);
+
+if (result.success) {
+  // Pass added
+} else {
+  // result.error contains error code
+}
+```
+
+### Error Codes
+
+- `PASS_LIBRARY_NOT_AVAILABLE` - Wallet not available
+- `INVALID_PASS_DATA` - Malformed pass
+- `USER_CANCELLED` - User dismissed
+- `PASS_ALREADY_EXISTS` - Already in wallet
+
+### Checking Existing Pass
+
+```typescript
+import { containsPass } from 'expo-passkite';
+
+const exists = await containsPass(
+  'pass.com.example.app',
+  'SERIAL-001'
+);
+```
+
+---
+
+## 10. EVENTS
+
+### Subscribing to Events
+
+```typescript
+import { onPassAdded, onPassRemoved } from 'expo-passkite';
+
+const addedSub = onPassAdded((event) => {
+  console.log('Added:', event.passTypeIdentifier, event.serialNumber);
+});
+
+const removedSub = onPassRemoved((event) => {
+  console.log('Removed:', event.passTypeIdentifier, event.serialNumber);
+});
+
+// Cleanup
+addedSub.remove();
+removedSub.remove();
+```
+
+### Event Type
+
+```typescript
+interface PassEvent {
+  passTypeIdentifier: string;
+  serialNumber: string;
+}
+```
+
+---
+
+## 11. COMPLETE TYPESCRIPT TYPES
+
+### PassField
+
+```typescript
+interface PassField {
+  key: string;
+  label?: string;
+  value: string | number | Date;
+  attributedValue?: string;
+  changeMessage?: string;
+  textAlignment?: TextAlignment;
+  dateStyle?: DateStyle;
+  timeStyle?: TimeStyle;
+  isRelative?: boolean;
+  ignoresTimeZone?: boolean;
+  numberStyle?: NumberStyle;
+  currencyCode?: string;
+  dataDetectorTypes?: DataDetectorType[];
+  semantics?: FieldSemantics;
+  row?: number;
+}
+```
+
+### Enums
+
+```typescript
+enum PassType {
+  BoardingPass = 'boardingPass',
+  Coupon = 'coupon',
+  EventTicket = 'eventTicket',
+  StoreCard = 'storeCard',
+  Generic = 'generic',
+}
+
+enum TransitType {
+  Air = 'PKTransitTypeAir',
+  Boat = 'PKTransitTypeBoat',
+  Bus = 'PKTransitTypeBus',
+  Train = 'PKTransitTypeTrain',
+  Generic = 'PKTransitTypeGeneric',
+}
+
+enum BarcodeFormat {
+  QR = 'PKBarcodeFormatQR',
+  PDF417 = 'PKBarcodeFormatPDF417',
+  Aztec = 'PKBarcodeFormatAztec',
+  Code128 = 'PKBarcodeFormatCode128',
+}
+
+enum PassImageType {
+  Icon = 'icon',
+  Logo = 'logo',
+  Strip = 'strip',
+  Background = 'background',
+  Thumbnail = 'thumbnail',
+  Footer = 'footer',
+}
+
+enum TextAlignment {
+  Left = 'PKTextAlignmentLeft',
+  Center = 'PKTextAlignmentCenter',
+  Right = 'PKTextAlignmentRight',
+  Natural = 'PKTextAlignmentNatural',
+}
+
+enum DateStyle {
+  None = 'PKDateStyleNone',
+  Short = 'PKDateStyleShort',
+  Medium = 'PKDateStyleMedium',
+  Long = 'PKDateStyleLong',
+  Full = 'PKDateStyleFull',
+}
+
+enum NumberStyle {
+  Decimal = 'PKNumberStyleDecimal',
+  Percent = 'PKNumberStylePercent',
+  Scientific = 'PKNumberStyleScientific',
+  SpellOut = 'PKNumberStyleSpellOut',
+}
+```
+
+---
+
+## 12. EXAMPLES
+
+### Complete Store Card Example
+
+```typescript
+import {
+  createPassBuilder,
+  createPass,
+  PassType,
+  BarcodeFormat,
+  PassImageType,
+  addPassToWallet,
+  canAddPasses,
+} from 'expo-passkite';
+
+async function createLoyaltyCard() {
+  // 1. Build pass data
+  const builder = createPassBuilder()
+    .setIdentifiers({
+      passTypeIdentifier: 'pass.com.example.coffee',
+      serialNumber: `CARD-${Date.now()}`,
+      teamIdentifier: 'ABCD123456',
+    })
+    .setOrganization({
+      organizationName: 'Coffee House',
+      description: 'Rewards Card',
+      logoText: 'Coffee House',
+    })
+    .setPassType(PassType.StoreCard)
+    .setColors({
+      backgroundColor: 'rgb(139, 69, 19)',
+      foregroundColor: 'rgb(255, 255, 255)',
+      labelColor: 'rgb(220, 200, 180)',
+    })
+    .addPrimaryField({
+      key: 'points',
+      label: 'POINTS',
+      value: '500',
+    })
+    .addSecondaryField({
+      key: 'name',
+      label: 'MEMBER',
+      value: 'Jane Smith',
+    })
+    .addAuxiliaryField({
+      key: 'level',
+      label: 'STATUS',
+      value: 'Gold Member',
+    })
+    .addBackField({
+      key: 'terms',
+      label: 'Terms',
+      value: 'Points expire after 12 months.',
+    })
+    .addBarcode({
+      format: BarcodeFormat.QR,
+      message: 'https://coffee.example.com/card/500',
+      altText: 'Scan for rewards',
+    });
+
+  const { passData, images } = builder.build();
+
+  // 2. Create pass instance
+  const pass = createPass(passData, images);
+
+  // 3. Add images
+  pass.addImage({ type: PassImageType.Icon, data: iconBuffer });
+  pass.addImage({ type: PassImageType.Logo, data: logoBuffer });
+  pass.addImage({ type: PassImageType.Strip, data: stripBuffer });
+
+  // 4. Sign
+  pass.setSigningCredentials({
+    signerCertificate: CERT_PEM,
+    signerKey: KEY_PEM,
+  });
+
+  // 5. Generate and add to wallet
+  const base64 = await pass.generateBase64();
+
+  if (await canAddPasses()) {
+    const result = await addPassToWallet(base64);
+    return result.success;
+  }
+  return false;
+}
+```
+
+### Boarding Pass Example
+
+```typescript
+const builder = createPassBuilder()
+  .setIdentifiers({
+    passTypeIdentifier: 'pass.com.airline.boarding',
+    serialNumber: 'FLIGHT-AA123',
+    teamIdentifier: 'ABCD123456',
+  })
+  .setOrganization({
+    organizationName: 'Example Airlines',
+    description: 'Boarding Pass',
+  })
+  .setPassType(PassType.BoardingPass)
+  .setTransitType(TransitType.Air)
+  .setColors({
+    backgroundColor: 'rgb(0, 51, 102)',
+    foregroundColor: 'rgb(255, 255, 255)',
+  })
+  .addHeaderField({
+    key: 'gate',
+    label: 'GATE',
+    value: 'A12',
+  })
+  .addPrimaryField({
+    key: 'origin',
+    label: 'SAN FRANCISCO',
+    value: 'SFO',
+  })
+  .addPrimaryField({
+    key: 'destination',
+    label: 'NEW YORK',
+    value: 'JFK',
+  })
+  .addSecondaryField({
+    key: 'passenger',
+    label: 'PASSENGER',
+    value: 'JOHN DOE',
+  })
+  .addAuxiliaryField({
+    key: 'boarding',
+    label: 'BOARDING',
+    value: '10:30 AM',
+  })
+  .addAuxiliaryField({
+    key: 'seat',
+    label: 'SEAT',
+    value: '23A',
+  })
+  .addBarcode({
+    format: BarcodeFormat.PDF417,
+    message: 'M1DOE/JOHN         AA 123 SFOJFK...',
+  });
+```
+
+### Event Ticket Example
+
+```typescript
+const builder = createPassBuilder()
+  .setIdentifiers({
+    passTypeIdentifier: 'pass.com.venue.ticket',
+    serialNumber: 'TICKET-2024-001',
+    teamIdentifier: 'ABCD123456',
+  })
+  .setOrganization({
+    organizationName: 'Concert Venue',
+    description: 'Concert Ticket',
+  })
+  .setPassType(PassType.EventTicket)
+  .setColors({
+    backgroundColor: 'rgb(30, 30, 30)',
+    foregroundColor: 'rgb(255, 255, 255)',
+  })
+  .addPrimaryField({
+    key: 'event',
+    label: 'EVENT',
+    value: 'Rock Concert 2024',
+  })
+  .addSecondaryField({
+    key: 'date',
+    label: 'DATE',
+    value: 'Dec 25, 2024',
+  })
+  .addSecondaryField({
+    key: 'venue',
+    label: 'VENUE',
+    value: 'Madison Square Garden',
+  })
+  .addAuxiliaryField({
+    key: 'seat',
+    label: 'SEAT',
+    value: 'Section A, Row 5, Seat 12',
+  })
+  .addBarcode({
+    format: BarcodeFormat.QR,
+    message: 'TICKET-2024-001',
+  })
+  .setRelevantDate(new Date('2024-12-25T19:00:00'));
+```
+
+---
+
+## LINKS
+
+- Repository: https://github.com/seventwo-studio/passkite
+- Documentation: https://seventwo-studio.github.io/passkite/
+- Apple PassKit Docs: https://developer.apple.com/documentation/walletpasses
+- Apple Pass Format: https://developer.apple.com/documentation/walletpasses/creating_the_source_for_a_pass

@@ -11,7 +11,10 @@
     "prepare": "bun run clean && bun run build",
     "prepublishOnly": "bun run build",
     "test": "bun test",
-    "test:coverage": "bun test --coverage"
+    "test:coverage": "bun test --coverage",
+    "docs": "bun run --cwd docs dev",
+    "docs:build": "bun run --cwd docs build",
+    "docs:preview": "bun run --cwd docs preview"
   },
   "keywords": [
     "expo",
