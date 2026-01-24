@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/seventwo-studio/passkite/compare/v1.0.1...v1.0.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* add .npmignore to reduce package size ([ff336be](https://github.com/seventwo-studio/passkite/commit/ff336be4ccad7552482fd938555312c9f66eee82))
+
 ## [1.0.1](https://github.com/seventwo-studio/passkite/compare/v1.0.0...v1.0.1) (2026-01-24)
 
 
