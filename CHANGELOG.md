@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/seventwo-studio/passkite/compare/v1.0.0...v1.0.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* add @types/bun to fix CI build ([762d5ee](https://github.com/seventwo-studio/passkite/commit/762d5ee147f442d47308cf0a18c97218584116b9))
+
 ## 1.0.0 (2026-01-24)
 
 
