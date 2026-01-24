@@ -40,6 +40,13 @@ yarn-error.log*
 # Test artifacts
 coverage/
 .nyc_output/
+test-output.pkpass
+test-passes/
+
+# Devenv
+.devenv/
+devenv.lock
+.devenv.flake.nix
 
 # Environment
 .env
