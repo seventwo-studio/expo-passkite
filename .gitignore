@@ -48,11 +48,6 @@ coverage/
 test-output.pkpass
 test-passes/
 
-# Devenv
-.devenv/
-devenv.lock
-.devenv.flake.nix
-
 # Environment
 .env
 .env.local
