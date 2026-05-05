@@ -35,23 +35,23 @@
     "url": "https://github.com/seventwo-studio/passkite/issues"
   },
   "peerDependencies": {
-    "expo": "*",
-    "react": "*",
-    "react-native": "*"
+    "expo": "52.0.48",
+    "react": "19.2.3",
+    "react-native": "0.83.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.0.0",
-    "@commitlint/config-conventional": "^19.0.0",
-    "@types/bun": "^1.0.0",
-    "@types/node": "^20.0.0",
-    "@types/node-forge": "^1.3.14",
-    "@types/react": "^18.0.0",
-    "expo": "~52.0.0",
-    "expo-module-scripts": "^4.0.0",
-    "typescript": "^5.0.0"
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@types/bun": "1.3.6",
+    "@types/node": "20.19.28",
+    "@types/node-forge": "1.3.14",
+    "@types/react": "18.3.27",
+    "expo": "52.0.48",
+    "expo-module-scripts": "4.1.10",
+    "typescript": "5.9.3"
   },
   "dependencies": {
-    "jszip": "^3.10.1",
-    "node-forge": "^1.3.1"
+    "jszip": "3.10.1",
+    "node-forge": "1.3.3"
   }
 }
