@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/seventwo-studio/expo-passkite/compare/v1.0.3...v2.0.0) (2026-05-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* `Pass`, `PassBuilder`, `createPass`, `createPassBuilder`, `loadCredentialsFromEnv`, `loadPassIdentityFromEnv`, `hasCredentialsInEnv`, `hasPassIdentityInEnv`, `CREDENTIAL_ENV_VARS`, `PassIdentity`, `APPLE_WWDR_G4_CERTIFICATE`, and `getWWDRCertificate` must now be imported from `expo-passkite/server` instead of `expo-passkite`.
+
+### Features
+
+* split client and server entry points ([#22](https://github.com/seventwo-studio/expo-passkite/issues/22)) ([786131f](https://github.com/seventwo-studio/expo-passkite/commit/786131f9992d6751b300356ce79daa8716357071))
+
 ## [1.0.3](https://github.com/seventwo-studio/expo-passkite/compare/v1.0.2...v1.0.3) (2026-05-06)
 
 
