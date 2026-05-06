@@ -7,6 +7,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   release-please:
@@ -41,11 +42,13 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
 
-      - name: Publish to npm
+      - name: Upgrade npm to latest (OIDC trusted publishing requires >= 11.5.1)
         if: ${{ steps.release.outputs.release_created }}
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm install -g npm@latest
+
+      - name: Publish to npm with provenance
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm publish --provenance --access public
