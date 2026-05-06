@@ -41,7 +41,7 @@ credentials/
 # Config files
 tsconfig.json
 bunfig.toml
-commitlint.config.js
+commitlint.config.mjs
 bun.lock
 
 # IDE
