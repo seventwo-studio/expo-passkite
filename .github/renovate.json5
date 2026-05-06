@@ -3,4 +3,13 @@
   // Inherit the org-wide Renovate preset. Add per-repo overrides below
   // only if this repo needs to deviate from the shared defaults.
   extends: ["local>seventwo-studio/.github"],
+  packageRules: [
+    {
+      // Expo SDK 55 ships with React Native 0.83.x. Cap react-native to
+      // that line so Renovate doesn't keep suggesting 0.84+ updates that
+      // would diverge from the SDK. Lift this when bumping to Expo SDK 56.
+      matchPackageNames: ["react-native"],
+      allowedVersions: "<0.84.0",
+    },
+  ],
 }
