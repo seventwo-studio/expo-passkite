@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "bun run build:types && bun build ./src/index.ts --outdir ./build --target node --packages=external",
+    "build": "bun run build:types && bun build ./src/index.ts ./src/withPasskite.ts --outdir ./build --target node --format cjs --packages external",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./build",
     "clean": "rm -rf build",
     "prepare": "bun run clean && bun run build",
