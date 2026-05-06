@@ -1,23 +1,6 @@
 // Types
 export * from './types';
 
-// Pass generation
-export { Pass, createPass } from './Pass';
-export { PassBuilder, createPassBuilder } from './PassBuilder';
-
-// Credentials management
-export {
-  loadCredentialsFromEnv,
-  loadPassIdentityFromEnv,
-  hasCredentialsInEnv,
-  hasPassIdentityInEnv,
-  CREDENTIAL_ENV_VARS,
-} from './credentials';
-export type { PassIdentity } from './credentials';
-
-// Embedded certificates
-export { APPLE_WWDR_G4_CERTIFICATE, getWWDRCertificate } from './certificates';
-
 // Native wallet integration
 export {
   addPassToWallet,
@@ -28,5 +11,9 @@ export {
   onPassRemoved,
 } from './ExpoPasskiteModule';
 
-// Note: Config plugin (withPasskite) is available via app.plugin.js
-// and should not be imported at runtime
+// Note: Pass generation (Pass, PassBuilder, credentials, certificates) lives in
+// `expo-passkite/server` because it depends on Node-only APIs (node-forge, node:fs).
+// Importing it from a React Native bundle will fail at runtime.
+//
+// Note: Config plugin (withPasskite) is available via app.plugin.js and
+// should not be imported at runtime.

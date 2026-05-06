@@ -4,8 +4,20 @@
   "description": "Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    },
+    "./server": {
+      "types": "./build/server.d.ts",
+      "default": "./build/server.js"
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "build": "bun run build:types && bun build ./src/index.ts ./src/withPasskite.ts --outdir ./build --target node --format cjs --packages external",
+    "build": "bun run build:types && bun build ./src/index.ts ./src/server.ts ./src/withPasskite.ts --outdir ./build --target node --format cjs --packages external",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./build",
     "clean": "rm -rf build",
     "prepare": "bun run clean && bun run build",

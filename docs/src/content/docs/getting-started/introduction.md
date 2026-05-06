@@ -32,22 +32,24 @@ PassKite is perfect for:
 3. **Generate** the `.pkpass` file as a base64 string
 4. **Add to Wallet** using the native module
 
-```typescript
-import { createPassBuilder, createPass, addPassToWallet } from 'expo-passkite';
+Pass generation runs on a server (`expo-passkite/server`); the client only adds the resulting base64 to the wallet (`expo-passkite`).
 
-// 1. Build
+```typescript
+// --- on your server ---
+import { createPassBuilder, createPass, PassType } from 'expo-passkite/server';
+
 const builder = createPassBuilder()
   .setIdentifiers({ /* ... */ })
   .setPassType(PassType.StoreCard);
 
-// 2. Create and sign
 const pass = createPass(builder.build().passData);
 pass.setSigningCredentials({ /* ... */ });
-
-// 3. Generate
 const base64 = await pass.generateBase64();
+// send `base64` to the client over your API
 
-// 4. Add to wallet
+// --- on the device ---
+import { addPassToWallet } from 'expo-passkite';
+
 await addPassToWallet(base64);
 ```
 

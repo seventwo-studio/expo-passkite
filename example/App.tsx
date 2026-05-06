@@ -11,8 +11,6 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {
-  createPassBuilder,
-  createPass,
   PassType,
   BarcodeFormat,
   addPassToWallet,
@@ -22,6 +20,10 @@ import {
   onPassAdded,
   onPassRemoved,
 } from 'expo-passkite';
+// Pass generation lives behind the /server entry — in a real app this would run
+// on your backend, not on-device. The example imports it here purely to demo
+// the unsigned-pass flow end-to-end.
+import { createPassBuilder, createPass } from 'expo-passkite/server';
 import Constants from 'expo-constants';
 
 // Load configuration from environment/app config

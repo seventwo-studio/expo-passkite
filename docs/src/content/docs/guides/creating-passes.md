@@ -5,12 +5,16 @@ description: Learn how to create and customize Apple Wallet passes
 
 PassKite provides a fluent builder API for creating passes. This guide covers the complete pass creation process.
 
+:::caution[Runs on the server]
+Everything in this guide imports from `expo-passkite/server` and depends on Node-only APIs (`node-forge`, `jszip`, `node:fs`). Run pass generation on your backend and ship the resulting `.pkpass` (or its base64 form) to the device, where you can use [`addPassToWallet`](../wallet-integration/) from `expo-passkite`.
+:::
+
 ## Pass Builder Overview
 
 The `createPassBuilder()` function returns a builder that lets you configure every aspect of your pass:
 
 ```typescript
-import { createPassBuilder, PassType } from 'expo-passkite';
+import { createPassBuilder, PassType } from 'expo-passkite/server';
 
 const builder = createPassBuilder()
   .setIdentifiers({ /* ... */ })
@@ -50,7 +54,7 @@ builder.setOrganization({
 ### Pass Type
 
 ```typescript
-import { PassType } from 'expo-passkite';
+import { PassType } from 'expo-passkite/server';
 
 builder.setPassType(PassType.StoreCard);
 
@@ -79,7 +83,7 @@ builder.setColors({
 Pass images are added after creating the pass instance:
 
 ```typescript
-import { createPass, PassImageType } from 'expo-passkite';
+import { createPass, PassImageType } from 'expo-passkite/server';
 
 const { passData, images } = builder.build();
 const pass = createPass(passData, images);
@@ -178,7 +182,7 @@ builder.addBackField({
 ## Adding Barcodes
 
 ```typescript
-import { BarcodeFormat } from 'expo-passkite';
+import { BarcodeFormat } from 'expo-passkite/server';
 
 // QR Code
 builder.addBarcode({
@@ -263,7 +267,7 @@ import {
   PassType,
   BarcodeFormat,
   PassImageType,
-} from 'expo-passkite';
+} from 'expo-passkite/server';
 
 const builder = createPassBuilder()
   // Required identifiers

@@ -5,7 +5,20 @@ description: Complete API reference for PassKite
 
 This page documents all exported functions, types, and constants from PassKite.
 
+## Entry Points
+
+PassKite exposes two entry points so React Native bundles never pull in Node-only signing code:
+
+| Entry point | Exports | Runtime |
+| --- | --- | --- |
+| `expo-passkite` | `addPassToWallet`, `canAddPasses`, `isPassLibraryAvailable`, `containsPass`, `onPassAdded`, `onPassRemoved`, all types/enums | React Native, web |
+| `expo-passkite/server` | `Pass`, `PassBuilder`, `createPass`, `createPassBuilder`, credential helpers, certificates, all types/enums | Node, Bun |
+
+The sections below note which entry point each export lives under.
+
 ## Pass Generation
+
+> Imported from `expo-passkite/server`.
 
 ### createPassBuilder()
 
@@ -294,6 +307,8 @@ generateBase64(): Promise<string>;
 ---
 
 ## Wallet Integration
+
+> Imported from `expo-passkite`.
 
 ### addPassToWallet(passData)
 
