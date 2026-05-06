@@ -11,16 +11,16 @@
     "prebuild:clean": "expo prebuild --clean"
   },
   "dependencies": {
-    "expo": "~54.0.31",
-    "expo-constants": "^18.0.13",
+    "expo": "54.0.34",
+    "expo-constants": "18.0.13",
     "expo-passkite": "file:..",
-    "expo-status-bar": "~3.0.9",
+    "expo-status-bar": "3.0.9",
     "react": "19.2.5",
     "react-native": "0.81.5"
   },
   "devDependencies": {
     "@types/react": "19.1.17",
-    "typescript": "~5.9.2"
+    "typescript": "5.9.3"
   },
   "private": true
 }
