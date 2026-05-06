@@ -82,6 +82,6 @@ console.log('Wallet available:', available);
 
 ## Next Steps
 
-Now that PassKite is installed, you need to set up your Apple signing credentials. See the [Setup Credentials](/passkite/guides/setup-credentials/) guide.
+Now that PassKite is installed, you need to set up your Apple signing credentials. See the [Setup Credentials](/expo-passkite/guides/setup-credentials/) guide.
 
-Then check out the [Quick Start](/passkite/getting-started/quick-start/) to create your first pass.
+Then check out the [Quick Start](/expo-passkite/getting-started/quick-start/) to create your first pass.

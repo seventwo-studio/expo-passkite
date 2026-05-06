@@ -5,16 +5,16 @@ import starlight from '@astrojs/starlight';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://seventwo-studio.github.io',
-	base: '/passkite',
+	base: '/expo-passkite',
 	integrations: [
 		starlight({
 			title: 'PassKite',
 			description: 'Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet',
 			social: [
-				{ icon: 'github', label: 'GitHub', href: 'https://github.com/seventwo-studio/passkite' },
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/seventwo-studio/expo-passkite' },
 			],
 			editLink: {
-				baseUrl: 'https://github.com/seventwo-studio/passkite/edit/main/docs/',
+				baseUrl: 'https://github.com/seventwo-studio/expo-passkite/edit/main/docs/',
 			},
 			sidebar: [
 				{
@@ -45,7 +45,7 @@ export default defineConfig({
 					tag: 'meta',
 					attrs: {
 						property: 'og:image',
-						content: 'https://seventwo-studio.github.io/passkite/og-image.png',
+						content: 'https://seventwo-studio.github.io/expo-passkite/og-image.png',
 					},
 				},
 			],

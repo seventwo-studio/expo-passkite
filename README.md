@@ -2,7 +2,7 @@
 
 Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet.
 
-**[Documentation](https://seventwo-studio.github.io/passkite/)** | **[API Reference](https://seventwo-studio.github.io/passkite/reference/api/)** | **[Setup Guide](https://seventwo-studio.github.io/passkite/guides/setup-credentials/)**
+**[Documentation](https://seventwo-studio.github.io/expo-passkite/)** | **[API Reference](https://seventwo-studio.github.io/expo-passkite/reference/api/)** | **[Setup Guide](https://seventwo-studio.github.io/expo-passkite/guides/setup-credentials/)**
 
 ## Installation
 
@@ -191,15 +191,15 @@ See [Google Wallet API documentation](https://developers.google.com/wallet) for 
 
 ## Documentation
 
-For complete documentation, visit **[seventwo-studio.github.io/passkite](https://seventwo-studio.github.io/passkite/)**
+For complete documentation, visit **[seventwo-studio.github.io/expo-passkite](https://seventwo-studio.github.io/expo-passkite/)**
 
-- [Getting Started](https://seventwo-studio.github.io/passkite/getting-started/introduction/)
-- [Setup Credentials](https://seventwo-studio.github.io/passkite/guides/setup-credentials/)
-- [Creating Passes](https://seventwo-studio.github.io/passkite/guides/creating-passes/)
-- [Pass Types](https://seventwo-studio.github.io/passkite/guides/pass-types/)
-- [Wallet Integration](https://seventwo-studio.github.io/passkite/guides/wallet-integration/)
-- [API Reference](https://seventwo-studio.github.io/passkite/reference/api/)
-- [TypeScript Types](https://seventwo-studio.github.io/passkite/reference/types/)
+- [Getting Started](https://seventwo-studio.github.io/expo-passkite/getting-started/introduction/)
+- [Setup Credentials](https://seventwo-studio.github.io/expo-passkite/guides/setup-credentials/)
+- [Creating Passes](https://seventwo-studio.github.io/expo-passkite/guides/creating-passes/)
+- [Pass Types](https://seventwo-studio.github.io/expo-passkite/guides/pass-types/)
+- [Wallet Integration](https://seventwo-studio.github.io/expo-passkite/guides/wallet-integration/)
+- [API Reference](https://seventwo-studio.github.io/expo-passkite/reference/api/)
+- [TypeScript Types](https://seventwo-studio.github.io/expo-passkite/reference/types/)
 
 ## License
 

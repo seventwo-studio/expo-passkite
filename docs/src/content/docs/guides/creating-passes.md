@@ -335,6 +335,6 @@ const pkpassBase64 = await pass.generateBase64();
 
 ## Next Steps
 
-- Learn about specific [Pass Types](/passkite/guides/pass-types/)
-- Add passes to wallet with [Wallet Integration](/passkite/guides/wallet-integration/)
-- See the full [API Reference](/passkite/reference/api/)
+- Learn about specific [Pass Types](/expo-passkite/guides/pass-types/)
+- Add passes to wallet with [Wallet Integration](/expo-passkite/guides/wallet-integration/)
+- See the full [API Reference](/expo-passkite/reference/api/)

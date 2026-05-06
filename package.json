@@ -28,11 +28,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seventwo-studio/passkite.git"
+    "url": "git+https://github.com/seventwo-studio/expo-passkite.git"
   },
-  "homepage": "https://github.com/seventwo-studio/passkite#readme",
+  "homepage": "https://github.com/seventwo-studio/expo-passkite#readme",
   "bugs": {
-    "url": "https://github.com/seventwo-studio/passkite/issues"
+    "url": "https://github.com/seventwo-studio/expo-passkite/issues"
   },
   "peerDependencies": {
     "expo": "52.0.48",

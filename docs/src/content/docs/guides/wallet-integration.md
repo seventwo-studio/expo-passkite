@@ -308,5 +308,5 @@ See [Google Wallet API documentation](https://developers.google.com/wallet) for 
 
 ## Next Steps
 
-- See the full [API Reference](/passkite/reference/api/)
-- Learn about [Pass Types](/passkite/guides/pass-types/)
+- See the full [API Reference](/expo-passkite/reference/api/)
+- Learn about [Pass Types](/expo-passkite/guides/pass-types/)
