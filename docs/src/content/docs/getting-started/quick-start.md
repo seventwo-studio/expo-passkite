@@ -14,6 +14,8 @@ Before you begin, make sure you have:
 
 ## Create a Simple Store Card
 
+The package splits along the runtime boundary: pass generation runs on a server (`expo-passkite/server`), and the device-side wallet APIs come from `expo-passkite`. The example below mixes both for clarity, but in a real app the server portion lives behind your API.
+
 ```typescript
 import {
   createPassBuilder,
@@ -21,9 +23,8 @@ import {
   PassType,
   BarcodeFormat,
   PassImageType,
-  addPassToWallet,
-  canAddPasses,
-} from 'expo-passkite';
+} from 'expo-passkite/server';
+import { addPassToWallet, canAddPasses } from 'expo-passkite';
 
 // Your signing credentials (see Setup Credentials guide)
 const signingCredentials = {

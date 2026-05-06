@@ -182,15 +182,16 @@ function MyComponent() {
 import React, { useState, useEffect } from 'react';
 import { View, Button, Text, Alert } from 'react-native';
 import {
-  createPassBuilder,
-  createPass,
-  PassType,
   addPassToWallet,
   canAddPasses,
   containsPass,
   onPassAdded,
   onPassRemoved,
 } from 'expo-passkite';
+// In a real app, the createPass/createPassBuilder calls below would run on
+// your backend — they are imported from `expo-passkite/server` because they
+// pull in node-forge and other Node-only dependencies.
+import { createPassBuilder, createPass, PassType } from 'expo-passkite/server';
 
 const PASS_TYPE_ID = 'pass.com.example.myapp';
 const SERIAL_NUMBER = 'CARD-001';

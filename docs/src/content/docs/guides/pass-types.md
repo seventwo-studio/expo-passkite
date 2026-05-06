@@ -10,7 +10,7 @@ Apple Wallet supports five distinct pass types, each with its own layout and int
 **Best for:** Loyalty cards, membership cards, gift cards
 
 ```typescript
-import { PassType } from 'expo-passkite';
+import { PassType } from 'expo-passkite/server';
 
 builder.setPassType(PassType.StoreCard);
 ```
@@ -116,7 +116,7 @@ builder.setPassType(PassType.BoardingPass);
 ### Transit Types
 
 ```typescript
-import { TransitType } from 'expo-passkite';
+import { TransitType } from 'expo-passkite/server';
 
 builder.setTransitType(TransitType.Air);
 

@@ -38,7 +38,10 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## Quick Example
 
 ```typescript
-import { createPassBuilder, createPass, PassType, addPassToWallet } from 'expo-passkite';
+// Pass generation runs on a server — Node-only deps live behind /server.
+import { createPassBuilder, createPass, PassType } from 'expo-passkite/server';
+// addPassToWallet runs on the device.
+import { addPassToWallet } from 'expo-passkite';
 
 // Build a store card pass
 const builder = createPassBuilder()

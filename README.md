@@ -34,7 +34,16 @@ npx expo prebuild
 
 ## Usage
 
-### Creating a Pass
+The package ships two entry points so React Native bundles never pull in Node-only signing code:
+
+| Entry point | Use it for | Runs in |
+| --- | --- | --- |
+| `expo-passkite` | Adding passes to Apple Wallet, querying state, listening to events, types/enums | React Native, web |
+| `expo-passkite/server` | Building, signing, and packaging `.pkpass` files (`Pass`, `PassBuilder`, credential helpers, certificates) | Node, Bun, your backend |
+
+The server entry depends on `node-forge`, `jszip`, and `node:fs`. Importing it from a React Native runtime will fail — generate passes on a server and ship the resulting `.pkpass` (or its base64 form) to the device.
+
+### Creating a Pass (server)
 
 ```typescript
 import {
@@ -43,7 +52,7 @@ import {
   PassType,
   BarcodeFormat,
   PassImageType,
-} from 'expo-passkite';
+} from 'expo-passkite/server';
 
 // Build pass data
 const builder = createPassBuilder()
