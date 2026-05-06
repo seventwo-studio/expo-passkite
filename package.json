@@ -1,6 +1,6 @@
 {
   "name": "expo-passkite",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet",
   "main": "build/index.js",
   "types": "build/index.d.ts",
