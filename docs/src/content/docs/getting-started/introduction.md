@@ -59,4 +59,4 @@ await addPassToWallet(base64);
 
 ## Next Steps
 
-Ready to get started? Head to the [Installation](/passkite/getting-started/installation/) guide.
+Ready to get started? Head to the [Installation](/expo-passkite/getting-started/installation/) guide.

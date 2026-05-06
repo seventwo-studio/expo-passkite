@@ -9,8 +9,8 @@ This guide will walk you through creating and adding your first pass to Apple Wa
 
 Before you begin, make sure you have:
 
-1. [Installed PassKite](/passkite/getting-started/installation/)
-2. [Set up your signing credentials](/passkite/guides/setup-credentials/)
+1. [Installed PassKite](/expo-passkite/getting-started/installation/)
+2. [Set up your signing credentials](/expo-passkite/guides/setup-credentials/)
 
 ## Create a Simple Store Card
 
@@ -155,6 +155,6 @@ removedSub.remove();
 
 ## Next Steps
 
-- Learn about different [Pass Types](/passkite/guides/pass-types/)
-- Explore [Creating Passes](/passkite/guides/creating-passes/) in depth
-- Check the [API Reference](/passkite/reference/api/)
+- Learn about different [Pass Types](/expo-passkite/guides/pass-types/)
+- Explore [Creating Passes](/expo-passkite/guides/creating-passes/) in depth
+- Check the [API Reference](/expo-passkite/reference/api/)

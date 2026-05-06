@@ -282,5 +282,5 @@ builder
 
 ## Next Steps
 
-- Learn to [Create Passes](/passkite/guides/creating-passes/) with the builder API
-- Add passes with [Wallet Integration](/passkite/guides/wallet-integration/)
+- Learn to [Create Passes](/expo-passkite/guides/creating-passes/) with the builder API
+- Add passes with [Wallet Integration](/expo-passkite/guides/wallet-integration/)

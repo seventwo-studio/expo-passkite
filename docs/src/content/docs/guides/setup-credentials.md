@@ -178,7 +178,7 @@ The Team ID in your pass must match the Team ID in your signing certificate.
 
 ### "Pass does not contain icon.png"
 
-Every pass requires an icon image. See [Creating Passes](/passkite/guides/creating-passes/) for image requirements.
+Every pass requires an icon image. See [Creating Passes](/expo-passkite/guides/creating-passes/) for image requirements.
 
 ## Additional Resources
 

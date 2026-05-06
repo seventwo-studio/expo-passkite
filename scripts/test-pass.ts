@@ -55,7 +55,7 @@ async function main() {
 
   builder.addBarcode({
     format: 'PKBarcodeFormatQR',
-    message: 'https://github.com/seventwo-studio/passkite',
+    message: 'https://github.com/seventwo-studio/expo-passkite',
     messageEncoding: 'iso-8859-1',
   });
 
