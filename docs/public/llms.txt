@@ -1,8 +1,8 @@
 # PassKite
 
-> Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet with Expo and React Native
+> Generate Apple Wallet passes, add them to iOS Wallet, and save Google Wallet JWTs on Android
 
-PassKite is an Expo/React Native library for generating Apple Wallet passes and adding them to device wallets.
+PassKite is an Expo/React Native library for generating Apple Wallet passes, adding them to iOS Wallet, and saving Google Wallet JWTs on Android.
 
 ## Documentation
 
@@ -44,7 +44,7 @@ await addPassToWallet(base64);
 
 - Pass Generation: Create valid .pkpass files with fluent builder API
 - All Pass Types: BoardingPass, Coupon, EventTicket, StoreCard, Generic
-- Wallet Integration: Add passes to iOS Wallet with native module
+- Wallet Integration: Add passes to iOS Wallet with native module and save Google Wallet JWTs on Android
 - Expo Config Plugin: Automatic iOS entitlements setup
 - Embedded WWDR: Apple certificate included, no extra setup
 
@@ -58,7 +58,8 @@ await addPassToWallet(base64);
 - `pass.generateBase64()` - Generate as base64
 
 ### Wallet
-- `addPassToWallet(base64)` - Add to device wallet
+- `addPassToWallet(base64)` - Add Apple Wallet pass to iOS Wallet
+- `addGoogleWalletJwt(jwt)` - Save Google Wallet JWT on Android
 - `canAddPasses()` - Check if can add passes
 - `isPassLibraryAvailable()` - Check wallet availability
 - `containsPass(typeId, serial)` - Check if pass exists
@@ -75,7 +76,7 @@ await addPassToWallet(base64);
 
 ## Requirements
 
-- Expo SDK 52+ or React Native 0.76+
+- Expo SDK 54+ or React Native 0.81+
 - Apple Developer Program membership
 - Pass Type ID certificate
 - iOS 15+ for wallet features

@@ -1,6 +1,6 @@
 # expo-passkite
 
-Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet.
+Generate Apple Wallet passes (`.pkpass`), add them to iOS Wallet, and save Google Wallet JWTs on Android.
 
 **[Documentation](https://seventwo-studio.github.io/expo-passkite/)** | **[API Reference](https://seventwo-studio.github.io/expo-passkite/reference/api/)** | **[Setup Guide](https://seventwo-studio.github.io/expo-passkite/guides/setup-credentials/)**
 
@@ -120,7 +120,7 @@ if (canAdd) {
   // Generate pass as base64
   const passBase64 = await pass.generateBase64();
 
-  // Add to wallet
+  // Add to Apple Wallet on iOS
   const result = await addPassToWallet(passBase64);
 
   if (result.success) {
@@ -189,12 +189,23 @@ openssl pkcs12 -in pass.p12 -out signerKey.pem -nocerts -nodes
 
 ## Android / Google Wallet
 
-For Android, the `addPassToWallet` function expects a Google Wallet JWT token instead of a .pkpass file. You'll need to:
+Android cannot add Apple `.pkpass` files directly. Use an explicit Google Wallet JWT API instead:
 
 1. Set up a Google Wallet API account
 2. Create pass classes and objects via the Google Wallet API
 3. Generate a signed JWT token server-side
-4. Pass the JWT to `addPassToWallet`
+4. Pass the JWT to `addGoogleWalletJwt(jwt)` or `addPassToWallet({ type: 'google-wallet', jwt })`
+
+```typescript
+import { addGoogleWalletJwt, addPassToWallet } from 'expo-passkite';
+
+const jwt = await fetchGoogleWalletJwt(userId);
+
+await addGoogleWalletJwt(jwt);
+
+// Or use the discriminated wallet payload:
+await addPassToWallet({ type: 'google-wallet', jwt });
+```
 
 See [Google Wallet API documentation](https://developers.google.com/wallet) for details.
 

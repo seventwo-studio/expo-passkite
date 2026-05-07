@@ -80,30 +80,30 @@ builder.setColors({
 
 ### Images
 
-Pass images are added after creating the pass instance:
+Pass images are added to the builder before calling `build()`:
 
 ```typescript
 import { createPass, PassImageType } from 'expo-passkite/server';
 
-const { passData, images } = builder.build();
-const pass = createPass(passData, images);
-
 // Required: Icon (29x29 pt)
-pass.addImage({
+builder.addImage({
   type: PassImageType.Icon,
   data: iconBuffer,
 });
 
 // Optional images
-pass.addImage({
+builder.addImage({
   type: PassImageType.Logo,
   data: logoBuffer,
 });
 
-pass.addImage({
+builder.addImage({
   type: PassImageType.Strip,
   data: stripBuffer,
 });
+
+const { passData, images } = builder.build();
+const pass = createPass(passData, images);
 ```
 
 #### Image Types and Sizes
@@ -318,14 +318,14 @@ const builder = createPassBuilder()
     altText: 'Scan for rewards',
   });
 
+// Add images
+builder.addImage({ type: PassImageType.Icon, data: iconBuffer });
+builder.addImage({ type: PassImageType.Logo, data: logoBuffer });
+builder.addImage({ type: PassImageType.Strip, data: stripBuffer });
+
 // Build and create
 const { passData, images } = builder.build();
 const pass = createPass(passData, images);
-
-// Add images
-pass.addImage({ type: PassImageType.Icon, data: iconBuffer });
-pass.addImage({ type: PassImageType.Logo, data: logoBuffer });
-pass.addImage({ type: PassImageType.Strip, data: stripBuffer });
 
 // Sign
 pass.setSigningCredentials({

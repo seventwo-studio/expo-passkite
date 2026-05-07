@@ -67,21 +67,21 @@ async function createMyPass() {
       altText: 'CARD-001',
     });
 
-  const { passData, images } = builder.build();
-
-  // 2. Create the pass instance
-  const pass = createPass(passData, images);
-
-  // 3. Add images (icon is required)
+  // 2. Add images (icon is required)
   // You'll need to load your images as Buffers
-  pass.addImage({
+  builder.addImage({
     type: PassImageType.Icon,
     data: iconImageBuffer,
   });
-  pass.addImage({
+  builder.addImage({
     type: PassImageType.Logo,
     data: logoImageBuffer,
   });
+
+  const { passData, images } = builder.build();
+
+  // 3. Create the pass instance
+  const pass = createPass(passData, images);
 
   // 4. Set signing credentials
   pass.setSigningCredentials(signingCredentials);

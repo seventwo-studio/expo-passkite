@@ -245,11 +245,11 @@ export function WalletCard() {
           value: '500',
         });
 
+      // Add images, build, sign, generate
+      builder.addImage({ type: PassImageType.Icon, data: iconBuffer });
+
       const { passData, images } = builder.build();
       const pass = createPass(passData, images);
-
-      // Add images, sign, generate
-      pass.addImage({ type: PassImageType.Icon, data: iconBuffer });
       pass.setSigningCredentials(credentials);
       const base64 = await pass.generateBase64();
 
@@ -288,11 +288,11 @@ For Android devices, PassKite supports Google Wallet via JWT tokens. The flow is
 
 1. Create pass classes and objects via the Google Wallet API (server-side)
 2. Generate a signed JWT token (server-side)
-3. Pass the JWT to `addPassToWallet`
+3. Pass the JWT to `addGoogleWalletJwt` or an explicit Google Wallet payload
 
 ```typescript
 import { Platform } from 'react-native';
-import { addPassToWallet } from 'expo-passkite';
+import { addGoogleWalletJwt, addPassToWallet } from 'expo-passkite';
 
 if (Platform.OS === 'ios') {
   // Use .pkpass base64
@@ -301,7 +301,10 @@ if (Platform.OS === 'ios') {
 } else {
   // Use Google Wallet JWT (obtained from your server)
   const jwt = await fetchGoogleWalletJwt(userId);
-  await addPassToWallet(jwt);
+  await addGoogleWalletJwt(jwt);
+
+  // Or use the discriminated payload API:
+  await addPassToWallet({ type: 'google-wallet', jwt });
 }
 ```
 

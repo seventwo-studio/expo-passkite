@@ -230,6 +230,16 @@ interface WalletResult {
 }
 ```
 
+### WalletPassPayload
+
+Explicit platform-specific payload accepted by `addPassToWallet`.
+
+```typescript
+type WalletPassPayload =
+  | { type: 'apple-wallet'; passBase64: string }
+  | { type: 'google-wallet'; jwt: string };
+```
+
 ### PassEvent
 
 Event data for pass lifecycle events.

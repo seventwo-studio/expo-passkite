@@ -275,19 +275,6 @@ setSigningCredentials(credentials: {
 }): void;
 ```
 
-#### addImage(image)
-
-Adds an image to the pass.
-
-```typescript
-addImage(image: {
-  type: PassImageType;
-  data: Buffer;
-  scale?: 1 | 2 | 3;           // Default: 1
-  locale?: string;             // For localized images
-}): void;
-```
-
 #### generate()
 
 Generates the `.pkpass` file as a Buffer.
@@ -310,19 +297,24 @@ generateBase64(): Promise<string>;
 
 > Imported from `expo-passkite`.
 
-### addPassToWallet(passData)
+### addPassToWallet(payload)
 
 Adds a pass to the device wallet.
 
 ```typescript
-function addPassToWallet(passData: string): Promise<{
+function addPassToWallet(
+  payload:
+    | string
+    | { type: 'apple-wallet'; passBase64: string }
+    | { type: 'google-wallet'; jwt: string }
+): Promise<{
   success: boolean;
   error?: string;
 }>;
 ```
 
 **Parameters:**
-- `passData` - Base64-encoded `.pkpass` file (iOS) or JWT token (Android)
+- `payload` - Base64-encoded `.pkpass` file for iOS, or an explicit wallet payload. Bare strings are treated as Apple Wallet `.pkpass` data and are not accepted as Google Wallet JWTs on Android.
 
 **Returns:** Promise resolving to result object.
 
@@ -331,6 +323,24 @@ function addPassToWallet(passData: string): Promise<{
 - `INVALID_PASS_DATA` - Malformed pass data
 - `USER_CANCELLED` - User dismissed dialog
 - `PASS_ALREADY_EXISTS` - Pass already in wallet
+
+---
+
+### addGoogleWalletJwt(jwt)
+
+Adds a pass to Google Wallet on Android using a signed JWT generated server-side.
+
+```typescript
+function addGoogleWalletJwt(jwt: string): Promise<{
+  success: boolean;
+  error?: string;
+}>;
+```
+
+**Parameters:**
+- `jwt` - Signed Google Wallet JWT from your server
+
+**Returns:** Promise resolving to result object.
 
 ---
 
