@@ -3,7 +3,7 @@ title: Introduction
 description: Learn about PassKite and what it can do for your app
 ---
 
-PassKite is an Expo/React Native library for generating Apple Wallet passes (`.pkpass` files) and adding them directly to iOS Wallet or Google Wallet.
+PassKite is an Expo/React Native library for generating Apple Wallet passes (`.pkpass` files), adding them directly to iOS Wallet, and saving Google Wallet JWTs on Android.
 
 ## What is PassKite?
 
@@ -55,7 +55,7 @@ await addPassToWallet(base64);
 
 ## Requirements
 
-- **Expo SDK 52+** or React Native 0.76+
+- **Expo SDK 54+** or React Native 0.81+
 - **Apple Developer Program** membership (for pass signing)
 - **iOS 15+** for wallet integration
 

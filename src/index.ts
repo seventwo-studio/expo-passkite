@@ -4,6 +4,7 @@ export * from './types';
 // Native wallet integration
 export {
   addPassToWallet,
+  addGoogleWalletJwt,
   canAddPasses,
   isPassLibraryAvailable,
   containsPass,

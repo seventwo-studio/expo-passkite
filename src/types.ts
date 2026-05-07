@@ -431,10 +431,32 @@ export interface AddPassResult {
 }
 
 /**
+ * Apple Wallet pass payload. Supported by addPassToWallet on iOS.
+ */
+export interface AppleWalletPassPayload {
+  type: 'apple-wallet';
+  passBase64: string;
+}
+
+/**
+ * Google Wallet pass payload. Supported by addPassToWallet on Android.
+ */
+export interface GoogleWalletPassPayload {
+  type: 'google-wallet';
+  jwt: string;
+}
+
+/**
+ * Explicit wallet payload for platform-specific wallet APIs.
+ */
+export type WalletPassPayload = AppleWalletPassPayload | GoogleWalletPassPayload;
+
+/**
  * Native module interface
  */
 export interface ExpoPasskiteModuleInterface {
   addPassToWallet(passData: string): Promise<AddPassResult>;
+  addGoogleWalletJwt(jwt: string): Promise<AddPassResult>;
   canAddPasses(): Promise<boolean>;
   isPassLibraryAvailable(): Promise<boolean>;
   containsPass(passTypeIdentifier: string, serialNumber: string): Promise<boolean>;
