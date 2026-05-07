@@ -1,7 +1,7 @@
 {
   "name": "expo-passkite",
   "version": "2.0.0",
-  "description": "Generate Apple Wallet passes (.pkpass) and add them to iOS Wallet or Google Wallet",
+  "description": "Generate Apple Wallet passes, add them to iOS Wallet, and save Google Wallet JWTs on Android",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "exports": {
@@ -47,9 +47,9 @@
     "url": "https://github.com/seventwo-studio/expo-passkite/issues"
   },
   "peerDependencies": {
-    "expo": "55.0.23",
-    "react": "19.2.5",
-    "react-native": "0.83.9"
+    "expo": ">=54.0.0 <56.0.0",
+    "react": ">=19.1.0 <20.0.0",
+    "react-native": ">=0.81.0 <0.84.0"
   },
   "devDependencies": {
     "@commitlint/cli": "20.5.3",

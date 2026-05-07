@@ -31,10 +31,7 @@ const withPasskiteEntitlements: ConfigPlugin<PasskitePluginOptions | void> = (
   });
 };
 
-const pkg = {
-  name: 'expo-passkite',
-  version: '0.1.0',
-};
+const pkg = require('../package.json') as { name: string; version: string };
 
 /**
  * Expo config plugin for expo-passkite
