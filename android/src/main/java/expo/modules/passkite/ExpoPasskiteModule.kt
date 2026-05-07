@@ -1,7 +1,6 @@
 package expo.modules.passkite
 
 import android.app.Activity
-import android.content.Intent
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.Promise
@@ -11,10 +10,56 @@ import com.google.android.gms.pay.PayApiAvailabilityStatus
 
 class ExpoPasskiteModule : Module() {
     private var payClient: PayClient? = null
+    private var payClientActivity: Activity? = null
     private var pendingPromise: Promise? = null
 
     companion object {
         private const val ADD_TO_WALLET_REQUEST_CODE = 1001
+    }
+
+    private fun getPayClient(): PayClient? {
+        val activity = appContext.currentActivity ?: return null
+
+        if (payClient == null || payClientActivity !== activity) {
+            payClient = Pay.getClient(activity)
+            payClientActivity = activity
+        }
+
+        return payClient
+    }
+
+    private fun saveGoogleWalletJwt(jwt: String, promise: Promise) {
+        val client = getPayClient()
+        val activity = appContext.currentActivity
+
+        if (client == null || activity == null) {
+            promise.resolve(mapOf(
+                "success" to false,
+                "error" to "Google Wallet client not available"
+            ))
+            return
+        }
+
+        if (jwt.isBlank()) {
+            promise.resolve(mapOf(
+                "success" to false,
+                "error" to "Google Wallet JWT must not be empty"
+            ))
+            return
+        }
+
+        // Store promise for result handling
+        pendingPromise = promise
+
+        try {
+            client.savePasses(jwt, activity, ADD_TO_WALLET_REQUEST_CODE)
+        } catch (e: Exception) {
+            pendingPromise = null
+            promise.resolve(mapOf(
+                "success" to false,
+                "error" to "Failed to add pass: ${e.message}"
+            ))
+        }
     }
 
     override fun definition() = ModuleDefinition {
@@ -23,15 +68,17 @@ class ExpoPasskiteModule : Module() {
         Events("onPassAdded", "onPassRemoved")
 
         OnCreate {
-            val activity = appContext.currentActivity
-            if (activity != null) {
-                payClient = Pay.getClient(activity)
-            }
+            getPayClient()
+        }
+
+        OnDestroy {
+            payClient = null
+            payClientActivity = null
         }
 
         // Check if passes can be added (Google Wallet available)
         AsyncFunction("canAddPasses") { promise: Promise ->
-            val client = payClient
+            val client = getPayClient()
             if (client == null) {
                 promise.resolve(false)
                 return@AsyncFunction
@@ -48,7 +95,7 @@ class ExpoPasskiteModule : Module() {
 
         // Check if pass library is available (Google Wallet installed)
         AsyncFunction("isPassLibraryAvailable") { promise: Promise ->
-            val client = payClient
+            val client = getPayClient()
             if (client == null) {
                 promise.resolve(false)
                 return@AsyncFunction
@@ -70,39 +117,17 @@ class ExpoPasskiteModule : Module() {
             false
         }
 
-        // Add a pass to Google Wallet
-        // Note: For Google Wallet, we need a JWT token from Google Pay API, not a .pkpass file
-        // This implementation shows a placeholder - in practice, you'd need to implement
-        // Google Wallet pass creation server-side and pass a JWT here
-        AsyncFunction("addPassToWallet") { passData: String, promise: Promise ->
-            val client = payClient
-            val activity = appContext.currentActivity
+        // Android cannot add Apple .pkpass payloads. Use addGoogleWalletJwt for Google Wallet.
+        AsyncFunction("addPassToWallet") { _: String, promise: Promise ->
+            promise.resolve(mapOf(
+                "success" to false,
+                "error" to "Android requires a Google Wallet JWT. Use addGoogleWalletJwt(jwt) or addPassToWallet({ type: 'google-wallet', jwt })."
+            ))
+        }
 
-            if (client == null || activity == null) {
-                promise.resolve(mapOf(
-                    "success" to false,
-                    "error" to "Google Wallet client not available"
-                ))
-                return@AsyncFunction
-            }
-
-            // Store promise for result handling
-            pendingPromise = promise
-
-            // The passData for Android should be a Google Wallet JWT token
-            // For Apple .pkpass files, we cannot directly add them to Google Wallet
-            // You would need to convert the pass data to Google Wallet format server-side
-
-            try {
-                // If passData is a Google Wallet JWT, use savePasses
-                client.savePasses(passData, activity, ADD_TO_WALLET_REQUEST_CODE)
-            } catch (e: Exception) {
-                pendingPromise = null
-                promise.resolve(mapOf(
-                    "success" to false,
-                    "error" to "Failed to add pass: ${e.message}"
-                ))
-            }
+        // Add a Google Wallet pass using a signed JWT generated by your server.
+        AsyncFunction("addGoogleWalletJwt") { jwt: String, promise: Promise ->
+            saveGoogleWalletJwt(jwt, promise)
         }
 
         // Handle activity result

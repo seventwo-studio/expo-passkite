@@ -1,6 +1,5 @@
-import { requireNativeModule, NativeModule } from 'expo';
-import { Platform } from 'react-native';
-import { AddPassResult, ExpoPasskiteModuleInterface } from './types';
+import type { NativeModule } from 'expo';
+import type { AddPassResult, ExpoPasskiteModuleInterface, WalletPassPayload } from './types';
 
 // Define events that the module can emit
 type ExpoPasskiteEvents = {
@@ -11,47 +10,127 @@ type ExpoPasskiteEvents = {
 // Native module interface extending NativeModule
 declare class ExpoPasskiteModuleType extends NativeModule<ExpoPasskiteEvents> implements ExpoPasskiteModuleInterface {
   addPassToWallet(passData: string): Promise<AddPassResult>;
+  addGoogleWalletJwt(jwt: string): Promise<AddPassResult>;
   canAddPasses(): Promise<boolean>;
   isPassLibraryAvailable(): Promise<boolean>;
   containsPass(passTypeIdentifier: string, serialNumber: string): Promise<boolean>;
 }
 
-// Import the native module
-const ExpoPasskiteNativeModule = requireNativeModule<ExpoPasskiteModuleType>('ExpoPasskite');
+let ExpoPasskiteNativeModule: ExpoPasskiteModuleType | null = null;
+
+function getPlatformOS(): string {
+  if (typeof process !== 'undefined' && process.env?.EXPO_OS) {
+    return process.env.EXPO_OS;
+  }
+
+  try {
+    const { Platform } = require('react-native') as { Platform: { OS: string } };
+    return Platform.OS;
+  } catch {
+    return 'node';
+  }
+}
+
+function getNativeModule(): ExpoPasskiteModuleType {
+  if (!ExpoPasskiteNativeModule) {
+    const { requireNativeModule } = require('expo') as typeof import('expo');
+    ExpoPasskiteNativeModule = requireNativeModule<ExpoPasskiteModuleType>('ExpoPasskite');
+  }
+  return ExpoPasskiteNativeModule;
+}
 
 /**
- * Add a pass to the device wallet
- * @param passBase64 Base64 encoded .pkpass file data
+ * Add a pass to the device wallet.
+ *
+ * Passing a string preserves the existing iOS Apple Wallet behavior and treats it
+ * as base64 encoded .pkpass data. Android requires an explicit Google Wallet
+ * JWT payload or addGoogleWalletJwt(jwt).
+ *
+ * @param payload Base64 encoded .pkpass data for iOS, or an explicit wallet payload
  * @returns Promise with the result of the operation
  */
-export async function addPassToWallet(passBase64: string): Promise<AddPassResult> {
-  if (Platform.OS === 'web') {
+export async function addPassToWallet(passBase64: string): Promise<AddPassResult>;
+export async function addPassToWallet(payload: WalletPassPayload): Promise<AddPassResult>;
+export async function addPassToWallet(payload: string | WalletPassPayload): Promise<AddPassResult> {
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
     return {
       success: false,
-      error: 'Wallet integration is not available on web',
+      error: 'Wallet integration is not available on this platform',
     };
   }
-  return ExpoPasskiteNativeModule.addPassToWallet(passBase64);
+
+  if (typeof payload === 'string') {
+    if (platformOS === 'android') {
+      return {
+        success: false,
+        error: 'Android requires a Google Wallet JWT. Use addGoogleWalletJwt(jwt) or addPassToWallet({ type: "google-wallet", jwt }).',
+      };
+    }
+
+    return getNativeModule().addPassToWallet(payload);
+  }
+
+  if (payload.type === 'google-wallet') {
+    return addGoogleWalletJwt(payload.jwt);
+  }
+
+  if (platformOS === 'android') {
+    return {
+      success: false,
+      error: 'Android cannot add Apple .pkpass payloads. Use addGoogleWalletJwt(jwt) with a Google Wallet JWT.',
+    };
+  }
+
+  return getNativeModule().addPassToWallet(payload.passBase64);
+}
+
+/**
+ * Add a Google Wallet pass on Android using a signed JWT generated server-side.
+ */
+export async function addGoogleWalletJwt(jwt: string): Promise<AddPassResult> {
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
+    return {
+      success: false,
+      error: 'Wallet integration is not available on this platform',
+    };
+  }
+
+  if (platformOS !== 'android') {
+    return {
+      success: false,
+      error: 'Google Wallet JWTs are only supported on Android',
+    };
+  }
+
+  return getNativeModule().addGoogleWalletJwt(jwt);
 }
 
 /**
  * Check if passes can be added on this device
  */
 export async function canAddPasses(): Promise<boolean> {
-  if (Platform.OS === 'web') {
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
     return false;
   }
-  return ExpoPasskiteNativeModule.canAddPasses();
+  return getNativeModule().canAddPasses();
 }
 
 /**
  * Check if the pass library is available
  */
 export async function isPassLibraryAvailable(): Promise<boolean> {
-  if (Platform.OS === 'web') {
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
     return false;
   }
-  return ExpoPasskiteNativeModule.isPassLibraryAvailable();
+  return getNativeModule().isPassLibraryAvailable();
 }
 
 /**
@@ -61,10 +140,12 @@ export async function containsPass(
   passTypeIdentifier: string,
   serialNumber: string
 ): Promise<boolean> {
-  if (Platform.OS === 'web') {
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
     return false;
   }
-  return ExpoPasskiteNativeModule.containsPass(passTypeIdentifier, serialNumber);
+  return getNativeModule().containsPass(passTypeIdentifier, serialNumber);
 }
 
 /**
@@ -73,7 +154,13 @@ export async function containsPass(
 export function onPassAdded(
   callback: (event: { passTypeIdentifier: string; serialNumber: string }) => void
 ): { remove: () => void } {
-  return ExpoPasskiteNativeModule.addListener('onPassAdded', callback);
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
+    return { remove: () => {} };
+  }
+
+  return getNativeModule().addListener('onPassAdded', callback);
 }
 
 /**
@@ -82,7 +169,21 @@ export function onPassAdded(
 export function onPassRemoved(
   callback: (event: { passTypeIdentifier: string; serialNumber: string }) => void
 ): { remove: () => void } {
-  return ExpoPasskiteNativeModule.addListener('onPassRemoved', callback);
+  const platformOS = getPlatformOS();
+
+  if (platformOS === 'web' || platformOS === 'node') {
+    return { remove: () => {} };
+  }
+
+  return getNativeModule().addListener('onPassRemoved', callback);
 }
 
-export default ExpoPasskiteNativeModule;
+export default {
+  addPassToWallet,
+  addGoogleWalletJwt,
+  canAddPasses,
+  isPassLibraryAvailable,
+  containsPass,
+  onPassAdded,
+  onPassRemoved,
+};
