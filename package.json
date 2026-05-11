@@ -1,6 +1,6 @@
 {
   "name": "expo-passkite",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Generate Apple Wallet passes, add them to iOS Wallet, and save Google Wallet JWTs on Android",
   "main": "build/index.js",
   "types": "build/index.d.ts",

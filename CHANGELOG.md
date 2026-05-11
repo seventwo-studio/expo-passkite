@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/seventwo-studio/expo-passkite/compare/v2.0.0...v2.0.1) (2026-05-11)
+
+
+### Bug Fixes
+
+* align Expo wallet platform APIs ([#26](https://github.com/seventwo-studio/expo-passkite/issues/26)) ([48947d3](https://github.com/seventwo-studio/expo-passkite/commit/48947d3ab76163f33521243d6bb1e14255ca2206))
+
 ## [2.0.0](https://github.com/seventwo-studio/expo-passkite/compare/v1.0.3...v2.0.0) (2026-05-06)
 
 
