@@ -47,9 +47,9 @@
     "url": "https://github.com/seventwo-studio/expo-passkite/issues"
   },
   "peerDependencies": {
-    "expo": ">=54.0.0 <56.0.0",
-    "react": ">=19.1.0 <20.0.0",
-    "react-native": ">=0.81.0 <0.84.0"
+    "expo": "55.0.24",
+    "react": "19.2.6",
+    "react-native": "0.83.9"
   },
   "devDependencies": {
     "@commitlint/cli": "20.5.3",
