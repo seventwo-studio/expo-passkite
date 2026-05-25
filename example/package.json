@@ -15,7 +15,7 @@
     "expo-constants": "55.0.16",
     "expo-passkite": "file:..",
     "expo-status-bar": "55.0.6",
-    "react": "19.2.5",
+    "react": "19.2.6",
     "react-native": "0.83.9"
   },
   "devDependencies": {
