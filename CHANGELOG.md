@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.1](https://github.com/seventwo-studio/expo-passkite/compare/v2.0.0...v2.0.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* align Expo wallet platform APIs ([#26](https://github.com/seventwo-studio/expo-passkite/issues/26)) ([48947d3](https://github.com/seventwo-studio/expo-passkite/commit/48947d3ab76163f33521243d6bb1e14255ca2206))
+* **deps:** update dependency expo to v55.0.24 ([#31](https://github.com/seventwo-studio/expo-passkite/issues/31)) ([e6170cc](https://github.com/seventwo-studio/expo-passkite/commit/e6170cceb2b94fa1e17e887364dcc1383f3f2f45))
+* **deps:** update dependency react to v19.2.6 ([#32](https://github.com/seventwo-studio/expo-passkite/issues/32)) ([7cadd64](https://github.com/seventwo-studio/expo-passkite/commit/7cadd64b5d8804e3ebe3dca8c1014d8d72fbebd3))
+
 ## [2.0.0](https://github.com/seventwo-studio/expo-passkite/compare/v1.0.3...v2.0.0) (2026-05-06)
 
 
