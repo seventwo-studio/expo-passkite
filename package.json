@@ -16,6 +16,14 @@
     "./app.plugin.js": "./app.plugin.js",
     "./package.json": "./package.json"
   },
+  "files": [
+    "android",
+    "build",
+    "ios",
+    "app.plugin.js",
+    "expo-module.config.json",
+    "expo-passkite.podspec"
+  ],
   "scripts": {
     "build": "bun run build:types && bun build ./src/index.ts ./src/server.ts ./src/withPasskite.ts --outdir ./build --target node --format cjs --packages external",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationMap --outDir ./build",
@@ -40,11 +48,14 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seventwo-studio/expo-passkite.git"
+    "url": "git+https://git.seventwo.studio/seventwo-studio/expo-passkite.git"
   },
-  "homepage": "https://github.com/seventwo-studio/expo-passkite#readme",
+  "homepage": "https://git.seventwo.studio/seventwo-studio/expo-passkite",
   "bugs": {
-    "url": "https://github.com/seventwo-studio/expo-passkite/issues"
+    "url": "https://git.seventwo.studio/seventwo-studio/expo-passkite/issues"
+  },
+  "publishConfig": {
+    "registry": "https://git.seventwo.studio/api/packages/seventwo-studio/npm/"
   },
   "peerDependencies": {
     "expo": ">=54.0.0 <56.0.0",
