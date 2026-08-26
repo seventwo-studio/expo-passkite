@@ -183,10 +183,14 @@ private class PassAdditionCompletion: NSObject, PKAddPassesViewControllerDelegat
             // Check if pass was actually added
             let wasAdded = self.library?.containsPass(self.pass) ?? false
 
-            self.promise.resolve([
-                "success": wasAdded,
-                "error": wasAdded ? nil : "User cancelled or pass was not added"
-            ])
+            if wasAdded {
+                self.promise.resolve(["success": true])
+            } else {
+                self.promise.resolve([
+                    "success": false,
+                    "cancelled": true
+                ])
+            }
         }
     }
 }

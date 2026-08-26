@@ -428,6 +428,7 @@ export interface PassGenerationOptions {
 export interface AddPassResult {
   success: boolean;
   error?: string;
+  cancelled?: boolean;
 }
 
 /**
